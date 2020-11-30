@@ -1,10 +1,6 @@
-include("helper.jl")
-
-DAYS = 5
-
-function solve(surgeries, rooms)
-    h = ones(Int, rooms, DAYS) # h[i, j] stores the first available hour in room 'i' and day 'j'
-    e = zeros(Int, rooms, DAYS) # e[i, j] stores the specialty in room 'i' and day 'j'
+function solve(surgeries, rooms, days; verbose=true)
+    h = ones(Int, rooms, days) # h[i, j] stores the first available hour in room 'i' and day 'j'
+    e = zeros(Int, rooms, days) # e[i, j] stores the specialty in room 'i' and day 'j'
     
     # solution vectors
     sc_d = Vector{Union{Nothing, Int64}}(nothing, length(surgeries)) # schedule days
@@ -13,12 +9,16 @@ function solve(surgeries, rooms)
 
     for s in surgeries
         idx_s, p_s, w_s, e_s, g_s, t_s = s
-        println("tentando agendar cirurgia ", idx_s)
+        if verbose
+            println("tentando agendar cirurgia ", idx_s)
+        end
         
-        for d in 1:DAYS
+        for d in 1:days
             if sc_r[idx_s] != nothing
                 # cirurgia já agendada. passar pra próxima
-                println("\tcirurgia ", idx_s, " já agendada. passar pra próxima")
+                if verbose
+                    println("\tcirurgia ", idx_s, " já agendada. passar pra próxima")
+                end
                 break
             end
 
@@ -31,7 +31,9 @@ function solve(surgeries, rooms)
             end
             if total_time_surgeon + t_s > 24
                 # cirurgiao ocupado para o dia 'd'. tentar no proximo dia
-                println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para o dia ", d, ". tentar no proximo dia")
+                if verbose
+                    println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para o dia ", d, ". tentar no proximo dia")
+                end
                 continue
             end
 
@@ -48,12 +50,16 @@ function solve(surgeries, rooms)
                 end
                 if surgeon_busy
                     # cirurgiao ocupado naquele momento. tentar na proxima sala
-                    println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado naquele momento. tentar na proxima sala")
+                    if verbose
+                        println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado naquele momento. tentar na proxima sala")
+                    end
                     continue
                 end
 
                 if e[r, d] == e_s || e[r, d] == 0
-                    println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", e[r, d], ")")
+                    if verbose
+                        println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", e[r, d], ")")
+                    end
                     if h[r, d] + t_s - 1 <= 46
                         sc_d[idx_s] = d
                         sc_r[idx_s] = r
@@ -62,15 +68,21 @@ function solve(surgeries, rooms)
                         e[r, d] = e_s
                         h[r, d] = min(h[r, d] + t_s + 2, 46)
                         # cirurgia foi agendada. passar pra proxima cirurgia
-                        println("\tcirurgia ", idx_s, " foi agendada no dia ", d, " na sala ", r, " em t = ", sc_h[idx_s])
+                        if verbose
+                            println("\tcirurgia ", idx_s, " foi agendada no dia ", d, " na sala ", r, " em t = ", sc_h[idx_s])
+                        end
                         break
                     else
                         # cirurgia ultrapassaria horario limite
-                        println("\tfalha na cirurgia ", idx_s, ": cirurgia ultrapassaria horario limite (h[r, d] + t_s - 1 = ", h[r, d], " + ", t_s, " - 1)")
+                        if verbose
+                            println("\tfalha na cirurgia ", idx_s, ": cirurgia ultrapassaria horario limite (h[r, d] + t_s - 1 = ", h[r, d], " + ", t_s, " - 1)")
+                        end
                     end
                 else
                     # sala 's' agendada pra especialidade 'e'.
-                    println("\tfalha na cirurgia ", idx_s, ": especialidades diferem (e_s=", e_s, ", e_rd=", e[r, d], ")")
+                    if verbose
+                        println("\tfalha na cirurgia ", idx_s, ": especialidades diferem (e_s=", e_s, ", e_rd=", e[r, d], ")")
+                    end
                 end
             end
         end
@@ -78,22 +90,3 @@ function solve(surgeries, rooms)
 
     sc_d, sc_r, sc_h
 end
-
-# using CSV
-rooms = 1
-surgeries = []
-for row in CSV.File("../Dados/toy1.csv")
-    # surgery = (row[:id], row[:priority], row[:waiting_time],
-        # row[:specialty], row[:surgeon], row[:duration])
-    surgery = (row[1], row[2], row[3], row[4], row[5], row[6])
-    push!(surgeries, surgery)
-end
-
-println("ROOMS: ", rooms)
-println("SURGERIES")
-display(surgeries)
-println("")
-
-sc_d, sc_r, sc_h = solve(surgeries, rooms)
-println("")
-print_solutions(surgeries, rooms, sc_d, sc_r, sc_h)
