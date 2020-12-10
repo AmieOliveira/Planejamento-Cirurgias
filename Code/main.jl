@@ -1,8 +1,9 @@
 using CSV, DataFrames
 using Debugger
 
-include("naive_1.jl")
 include("helper.jl")
+include("naive_1.jl")
+include("alns.jl")
 
 function load_surgeries(filepath)
     surgeries = []
@@ -15,22 +16,31 @@ end
 
 # load instance parameters
 days = 5
-penalties = [90, 20, 5, 1]
+penalties = [900, 200, 50, 10] #TODO: these priorities were tweaked. should confirm
 surgeries = load_surgeries("../Dados/toy1.csv")
 rooms = 1
+
 instance = (surgeries, rooms, days, penalties)
-# println("SURGERIES")
-# display(surgeries)
-# println("ROOMS: ", rooms)
 
-# solve instance
-sc_d, sc_r, sc_h = solve(instance, verbose=false)
-println("")
-print_solutions(instance, sc_d, sc_r, sc_h)
+solution = solve(instance, verbose=false)
 
-# evaluate target function
-fn = target_fn(instance, sc_d, sc_r, sc_h)
+print_solution(instance, solution)
+fn = target_fn(instance, solution)
 println("")
 println("Target function: ", fn)
 
-# solve_alns(problem[:elements], problem[:capacity], SA_max=1000, α=0.99, T0=60, Tf=10e-6, r=0.4, σ1=10, σ2=5, σ3=15, s=solution)
+solution = random_removal(instance, solution)
+solution = random_removal(instance, solution)
+solution = random_removal(instance, solution)
+print_solution(instance, solution)
+fn = target_fn(instance, solution)
+println("")
+println("Target function: ", fn)
+
+solution = @run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+sc_d, sc_r, sc_h = solution
+println("ALNS solution:", solution)
+print_solution(instance, solution)
+fn = target_fn(instance, sc_d, sc_r, sc_h)
+println("")
+println("Target function: ", fn)
