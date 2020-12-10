@@ -1,4 +1,6 @@
 using Random
+using CSV
+using DataFrames
 
 n_s = 50 # total number of surgeries to generate
 p_min = 1 # minimum priority (warning: should be between [1;4])
@@ -30,7 +32,6 @@ end
 
 if abspath(PROGRAM_FILE) == @__FILE__
     if length(ARGS) == 1
-        using CSV, DataFrames
         filepath = ARGS[1]
 
         surgeries = generate_uniform_instances(n_s, p_min, p_max, 
