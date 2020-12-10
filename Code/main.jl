@@ -1,4 +1,6 @@
 using CSV, DataFrames
+using Debugger
+
 include("naive_1.jl")
 include("helper.jl")
 
@@ -12,20 +14,23 @@ function load_surgeries(filepath)
 end
 
 # load instance parameters
-DAYS = 5
-PENALTIES = [90, 20, 5, 1]
+days = 5
+penalties = [90, 20, 5, 1]
 surgeries = load_surgeries("../Dados/toy1.csv")
-rooms = 2
+rooms = 1
+instance = (surgeries, rooms, days, penalties)
 # println("SURGERIES")
 # display(surgeries)
 # println("ROOMS: ", rooms)
 
 # solve instance
-sc_d, sc_r, sc_h = solve(surgeries, rooms, DAYS, verbose=false)
+sc_d, sc_r, sc_h = solve(instance, verbose=false)
 println("")
-print_solutions(surgeries, rooms, sc_d, sc_r, sc_h)
+print_solutions(instance, sc_d, sc_r, sc_h)
 
 # evaluate target function
-target_fn = eval_solution(surgeries, rooms, PENALTIES, sc_d, sc_r, sc_h)
+fn = target_fn(instance, sc_d, sc_r, sc_h)
 println("")
-println("Target function: ", target_fn)
+println("Target function: ", fn)
+
+# solve_alns(problem[:elements], problem[:capacity], SA_max=1000, α=0.99, T0=60, Tf=10e-6, r=0.4, σ1=10, σ2=5, σ3=15, s=solution)

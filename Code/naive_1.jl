@@ -1,4 +1,6 @@
-function solve(surgeries, rooms, days; verbose=true)
+function solve(instance; verbose=true)
+    surgeries, rooms, days, penalties = instance
+    
     h = ones(Int, rooms, days) # h[i, j] stores the first available hour in room 'i' and day 'j'
     e = zeros(Int, rooms, days) # e[i, j] stores the specialty in room 'i' and day 'j'
     
