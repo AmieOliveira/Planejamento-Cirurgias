@@ -17,7 +17,7 @@ end
 # load instance parameters
 days = 5
 penalties = [900, 200, 50, 10] #TODO: these priorities were tweaked. should confirm
-surgeries = load_surgeries("../Dados/toy1.csv")
+surgeries = load_surgeries("Dados/toy1.csv") # ("../Dados/toy1.csv")
 rooms = 1
 
 instance = (surgeries, rooms, days, penalties)
@@ -37,10 +37,10 @@ fn = target_fn(instance, solution)
 println("")
 println("Target function: ", fn)
 
-solution = @run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+solution = Debugger.@run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
 sc_d, sc_r, sc_h = solution
 println("ALNS solution:", solution)
 print_solution(instance, solution)
-fn = target_fn(instance, sc_d, sc_r, sc_h)
+fn = target_fn(instance, (sc_d, sc_r, sc_h))
 println("")
 println("Target function: ", fn)

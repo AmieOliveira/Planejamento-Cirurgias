@@ -163,3 +163,16 @@ function get_room_specialty(instance, solution, room, day)
 
     return nothing
 end
+
+
+# FIXME: Acrescentar numero de dias no criterio!
+function most_prioritary(surgery1, surgery2)
+    idx_s1, p_s1, w_s1, e_s1, g_s1, t_s1 = surgery1
+    idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = surgery2
+
+    if (p_s1 < ps2) # || ((p_s == surgeries_ordered[1][2]) && (w_s ))
+        return surgery1
+    else
+        return surgery2
+    end
+end
