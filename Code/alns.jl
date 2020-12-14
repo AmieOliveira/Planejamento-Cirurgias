@@ -56,7 +56,7 @@ function greedy_insertion(instance, solution)
                     idx_so2, p_so2, w_so2, e_so2, g_so2, t_so2 = so2
 
                     if most_prioritary(s, so1) == so1 && most_prioritary(s, so2) == so2
-                        insert!(surgeries_ordered, i+1, x)
+                        insert!(surgeries_ordered, i+1, s)
                     end
                 end
                 if pushed == false
