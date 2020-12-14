@@ -1,4 +1,7 @@
-using Random
+using Random, Plots, Printf
+#Plots.pyplot()
+
+dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
 function print_solution(instance, solution)
     surgeries, rooms, days, penalties = instance
@@ -49,25 +52,33 @@ function print_solution(instance, solution)
     end
 end
 
-function eval_surgery(surgery, rooms, penalties, sc_d, sc_r, sc_h)
+function eval_surgery(surgery, rooms, penalties, scd, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
-    scheduled = (sc_d[idx_s] != nothing)
+    scheduled = (scd != nothing)
     
     if scheduled
-        return (w_s + 2 + sc_d[idx_s]) * t_s
+        cost = (w_s + 2 + scd) * t_s
+        if verbose
+            @printf("Surgery %i scheduled with cost: %f\n", idx_s, cost)
+        end
+        return cost
     else
-        return (w_s + 7) * penalties[p_s]
+        cost = (w_s + 7) * t_s * penalties[p_s]
+        if verbose
+            @printf("Surgery %i not scheduled. Cost: %f\n", idx_s, cost)
+        end
+        return cost
     end
 end
 
-function target_fn(instance, solution)
+function target_fn(instance, solution, verbose=false)
     surgeries, rooms, days, penalties = instance
     sc_d, sc_r, sc_h = solution
 
     total = 0
     for s in surgeries
         # println("f$(s) = $(eval_surgery(s, rooms, penalties, sc_d, sc_r, sc_h))")
-        total += eval_surgery(s, rooms, penalties, sc_d, sc_r, sc_h)
+        total += eval_surgery(s, rooms, penalties, sc_d[s[1]], verbose)
     end
     
     total
@@ -172,7 +183,18 @@ function most_prioritary(surgery1, surgery2)
 
     if (p_s1 < p_s2) # || ((p_s == surgeries_ordered[1][2]) && (w_s ))
         return surgery1
-    else
+    elseif (p_s1 > p_s2)
         return surgery2
+    else    #(p_s1 == p_s2)
+        if (w_s1 > w_s2)
+            return surgery1
+        elseif (w_s2 > w_s1)
+            return surgery2
+        else
+            if idx_s1 < idx_s2
+                return surgery1
+            end
+            return surgery2
+        end
     end
 end

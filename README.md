@@ -9,7 +9,7 @@ Trabalho para Meta-heurísticas em Otimização Combinatória (CPS783)
 
 ## TODOs:
 - Código verificador de viabilidade de uma solução?
-- Acertar a ordem de prioridades (incluir comparacao por dia)
+- ~~Acertar a ordem de prioridades (incluir comparacao por dia)~~ ✓
 - Mudar estrutura de dados do ALNS para aumentar a eficiencia da heuristica 
 (diminuir tempo que leva para rodar): free_timeslots como array de intervalos 
 de tempo livre e array com especialidades das salas
