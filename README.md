@@ -17,7 +17,7 @@ de tempo livre e array com especialidades das salas
 - Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção
-- Plots das solução
+- ~~Plots das solução~~ Mudança das cores nas plots (e o que mais julgarmos que seja bom)
 - Duas FOs: comparar o impacto de multiplicar pela duracao da cirurgia
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de 
 uma instância, ou para agendar sem ultrapassar o tempo máximo de espera 
