@@ -1,6 +1,8 @@
 function solve(instance; verbose=true)
     surgeries, rooms, days, penalties = instance
     
+    sort!(surgeries, by = x -> x[2])
+
     h = ones(Int, rooms, days) # h[i, j] stores the first available hour in room 'i' and day 'j'
     e = zeros(Int, rooms, days) # e[i, j] stores the specialty in room 'i' and day 'j'
     
