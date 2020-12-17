@@ -1,6 +1,7 @@
 using Random, Plots, Printf
 #Plots.pyplot()
 
+janelas_tempo = [3, 15, 60, 365]
 dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 cores_p = [:red, :orange, :yellow, :green]
 
@@ -244,4 +245,24 @@ end
 
 function is_more_prioritary(surgery1, surgery2)
     return most_prioritary(surgery1, surgery2) == surgery1
+end
+
+function badly_scheduled(surgeries, solution)
+    sc_d, sc_r, sc_h = solution
+
+    bad = []
+
+    for s in surgeries
+        idx_s, p_s, w_s, e_s, g_s, t_s = s
+        if sc_d[idx_s] + w_s + 2 > janelas_tempo[p_s] + 1
+            # NOTE: Coloco +1 na janela devido à forma como 
+            #   está implementado o wait-time. Se não fizer 
+            #   isso todas as urgências ficam fora do prazo, 
+            #   mesmo feitas nas segundas
+            @printf("Cirurgia %s fora de prazo!\n", idx_s)
+            push!(bad, idx_s)
+        end
+    end
+
+    return bad
 end
