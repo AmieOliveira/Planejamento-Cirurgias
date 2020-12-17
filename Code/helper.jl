@@ -2,6 +2,7 @@ using Random, Plots, Printf
 #Plots.pyplot()
 
 dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
+cores_p = [:red, :orange, :yellow, :green]
 
 function print_solution(instance, solution)
     surgeries, rooms, days, penalties = instance
@@ -75,7 +76,7 @@ function plot_solution(instance, solution, filename="teste")
                 idx_s, p_s, w_s, e_s, g_s, t_s = s
                 if sc_d[idx_s] == d && sc_r[idx_s] == r
                     s_label = @sprintf("Cirurgia %i", idx_s)
-                    plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label)
+                    plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label, color=cores_p[p_s])
                     annotate!(sc_h[idx_s]+.5, 0.5, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
                 end
             end
@@ -99,13 +100,13 @@ function eval_surgery(surgery, rooms, penalties, scd, verbose)
     scheduled = (scd != nothing)
     
     if scheduled
-        cost = (w_s + 2 + scd) * t_s
+        cost = (w_s + 2 + scd)# * t_s
         if verbose
             @printf("Surgery %i scheduled with cost: %f\n", idx_s, cost)
         end
         return cost
     else
-        cost = (w_s + 7) * t_s * penalties[p_s]
+        cost = (w_s + 7) * penalties[p_s]# * t_s
         if verbose
             @printf("Surgery %i not scheduled. Cost: %f\n", idx_s, cost)
         end

@@ -17,7 +17,7 @@ end
 # load instance parameters
 days = 5
 penalties = [900, 200, 50, 10] #TODO: these priorities were tweaked. should confirm
-surgeries = load_surgeries("Dados/fullrand_s20_p1-4_w0-15_t4-16_e5_g8.csv")  #"Dados/toy1.csv")  # ("../Dados/toy1.csv")
+surgeries = load_surgeries("Dados/toy1.csv")    # "Dados/fullrand_s20_p1-4_w0-15_t4-16_e5_g8.csv") # ("../Dados/toy1.csv")
 rooms = 1
 
 # Solution set up
