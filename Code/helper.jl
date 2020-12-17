@@ -240,3 +240,7 @@ function most_prioritary(surgery1, surgery2)
         end
     end
 end
+
+function is_more_prioritary(surgery1, surgery2)
+    return most_prioritary(surgery1, surgery2) == surgery1
+end

@@ -1,7 +1,9 @@
+include("helper.jl")
+
 function solve(instance; verbose=true)
     surgeries, rooms, days, penalties = instance
     
-    sort!(surgeries, by = x -> x[2])
+    sort!(surgeries, lt = (x, y) -> is_more_prioritary(x, y))
 
     h = ones(Int, rooms, days) # h[i, j] stores the first available hour in room 'i' and day 'j'
     e = zeros(Int, rooms, days) # e[i, j] stores the specialty in room 'i' and day 'j'
