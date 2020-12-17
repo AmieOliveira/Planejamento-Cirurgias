@@ -4,6 +4,7 @@ import argparse
 import pdb
 
 PENALTIES = [90, 20, 5, 1]
+DEADLINES = [3, 15, 60, 365]
 
 def is_overlap(x1, x2, y1, y2):
 	return x1 <= y2 and y1 <= x2
@@ -76,8 +77,16 @@ if __name__ == '__main__':
 	for idx, surgery in df.iterrows():
 		if surgery["Dia (d)"] == -1 or surgery["Sala (r)"] == -1 or surgery["Horário (t)"] == -1:
 			# Surgery isn't scheduled
-			target_fn += PENALTIES[int(surgery["Prioridade (p)"])]
+			target_fn += PENALTIES[int(surgery["Prioridade (p)"]) - 1]
 		else:
 			# Surgery is scheduled
 			target_fn += (surgery["Dias_espera (w)"] + 2 + surgery["Dia (d)"])
+			print(f"Cirurgia {surgery.name}: {surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']} = {surgery['Dias_espera (w)'] + 2 + surgery['Dia (d)']}")
+
+		if (surgery["Dias_espera (w)"] + 2 + surgery["Dia (d)"]) > DEADLINES[int(surgery["Prioridade (p)"]) - 1]:
+			# Surgery exceeding deadline
+			print(f"\tCirurgia {surgery.name}: {surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']} > {DEADLINES[int(surgery['Prioridade (p)']) - 1]} (prazo).")
+			print(f"\tPenalidade: + {PENALTIES[int(surgery['Prioridade (p)'])]}")
+			target_fn += PENALTIES[int(surgery["Prioridade (p)"]) - 1]
+
 	print(f"Target function: {target_fn}")
