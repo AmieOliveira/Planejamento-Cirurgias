@@ -17,7 +17,7 @@ end
 # load instance parameters
 days = 5
 penalties = [900, 200, 50, 10] #TODO: these priorities were tweaked. should confirm
-surgeries = load_surgeries("Dados/toy1.csv")    # "Dados/fullrand_s20_p1-4_w0-15_t4-16_e5_g8.csv") # ("../Dados/toy1.csv")
+surgeries = load_surgeries("../Dados/fullrand_s20_p1-4_w0-15_t4-16_e5_g8.csv")  #"Dados/toy1.csv")  # ("../Dados/toy1.csv")
 rooms = 1
 
 # Solution set up
@@ -31,13 +31,13 @@ fn = target_fn(instance, solution);#, true)
 println("")
 println("Target function: ", fn)
 
-#solution = random_removal(instance, solution)
-#solution = random_removal(instance, solution)
-#solution = random_removal(instance, solution)
-#print_solution(instance, solution)
-#fn = target_fn(instance, solution)
-#println("")
-#println("Target function: ", fn)
+solution = random_removal(instance, solution)
+solution = random_removal(instance, solution)
+solution = random_removal(instance, solution)
+print_solution(instance, solution)
+fn = target_fn(instance, solution)
+println("")
+println("Target function: ", fn)
 
 solution = Debugger.@run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
 sc_d, sc_r, sc_h = solution
@@ -46,3 +46,4 @@ print_solution(instance, solution)
 fn = target_fn(instance, (sc_d, sc_r, sc_h));#, true)
 println("")
 println("Target function: ", fn)
+
