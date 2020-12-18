@@ -2,6 +2,7 @@ using Random, Plots, Printf
 #Plots.pyplot()
 
 janelas_tempo = [3, 15, 60, 365]
+penalty_timeout = 2
 dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 cores_p = [:red, :orange, :yellow, :green]
 
@@ -101,13 +102,29 @@ function eval_surgery(surgery, rooms, penalties, scd, verbose)
     scheduled = (scd != nothing)
     
     if scheduled
-        cost = (w_s + 2 + scd)# * t_s
+        wait = w_s + 2 + scd
+        cost = wait*wait # wait/t_s
+
+        if wait > janelas_tempo[p_s] + 1
+            # Penalidade por passar do prazo
+            cost = cost * penalties[ min(p_s, penalty_timeout) ]
+        end
+        
         if verbose
             @printf("Surgery %i scheduled with cost: %f\n", idx_s, cost)
         end
         return cost
     else
-        cost = (w_s + 7) * penalties[p_s]# * t_s
+        wait = w_s + 7
+        cost = wait*wait * penalties[p_s]# wait/t_s
+
+        if wait + 7 + 2 > janelas_tempo[p_s] + 1 
+            # Penalidade por passar do prazo
+            # Somo 2 do proximo final de semana. Ja tenho 
+            # que saber agora que vou passar do prazo
+            cost = cost * penalties[ min(p_s, penalty_timeout) ]
+        end
+
         if verbose
             @printf("Surgery %i not scheduled. Cost: %f\n", idx_s, cost)
         end
@@ -249,18 +266,25 @@ end
 
 function badly_scheduled(surgeries, solution)
     sc_d, sc_r, sc_h = solution
-
     bad = []
 
     for s in surgeries
         idx_s, p_s, w_s, e_s, g_s, t_s = s
-        if sc_d[idx_s] + w_s + 2 > janelas_tempo[p_s] + 1
-            # NOTE: Coloco +1 na janela devido à forma como 
-            #   está implementado o wait-time. Se não fizer 
-            #   isso todas as urgências ficam fora do prazo, 
-            #   mesmo feitas nas segundas
-            @printf("Cirurgia %s fora de prazo!\n", idx_s)
-            push!(bad, idx_s)
+        if sc_d[idx_s] != nothing
+            if sc_d[idx_s] + w_s + 2 > janelas_tempo[p_s] + 1
+                # NOTE: Coloco +1 na janela devido à forma como 
+                #   está implementado o wait-time. Se não fizer 
+                #   isso todas as urgências ficam fora do prazo, 
+                #   mesmo feitas nas segundas
+                @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                push!(bad, idx_s)
+            end
+        else
+            if w_s + 7 + 2 > janelas_tempo[p_s] + 1
+                # NOTE: Coloco +2 dias para contar com o proximo fds
+                @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                push!(bad, idx_s)
+            end
         end
     end
 
