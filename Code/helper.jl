@@ -70,9 +70,9 @@ function plot_solution(instance, solution, filename="teste")
     #fig = figure()
         pls = Any[]
         for d in 1:days
-            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black)
+            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
             #hline()
-            yaxis!(p, dias[d], showaxis=false)
+            yaxis!(p, dias[d])#, showaxis=false)
             texts = []
             for s in surgeries
                 idx_s, p_s, w_s, e_s, g_s, t_s = s
@@ -100,14 +100,16 @@ end
 function eval_surgery(surgery, rooms, penalties, scd, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
     scheduled = (scd != nothing)
+
+    alpha = 10
     
     if scheduled
         wait = w_s + 2 + scd
-        cost = wait*wait # wait/t_s
+        cost = wait^2 # wait/t_s
 
         if wait > janelas_tempo[p_s] + 1
             # Penalidade por passar do prazo
-            cost = cost * penalties[ min(p_s, penalty_timeout) ]
+            cost = cost + (wait-janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
         end
         
         if verbose
@@ -116,13 +118,13 @@ function eval_surgery(surgery, rooms, penalties, scd, verbose)
         return cost
     else
         wait = w_s + 7
-        cost = wait*wait * penalties[p_s]# wait/t_s
+        cost = wait^2 * penalties[p_s]# wait/t_s
 
-        if wait + 7 + 2 > janelas_tempo[p_s] + 1 
+        if wait + 2 > janelas_tempo[p_s] + 1 
             # Penalidade por passar do prazo
             # Somo 2 do proximo final de semana. Ja tenho 
             # que saber agora que vou passar do prazo
-            cost = cost * penalties[ min(p_s, penalty_timeout) ]
+            cost = cost + (wait + 2 - janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
         end
 
         if verbose
@@ -247,15 +249,27 @@ function most_prioritary(surgery1, surgery2)
     elseif (p_s1 > p_s2)
         return surgery2
     else    #(p_s1 == p_s2)
+        # Mesma prioridade: compara-se o tempo de espera
         if (w_s1 > w_s2)
             return surgery1
         elseif (w_s2 > w_s1)
             return surgery2
         else
-            if idx_s1 < idx_s2
+            # Mesma prioridade e tempo de espera: compara-se a duração 
+            #   da cirurgia (cirurgias mais curtas permitem realizar 
+            #   mais cirurgias)
+
+            if t_s1 < t_s2
                 return surgery1
+            elseif ts_1 > t_s2
+                return surgery2
+            else 
+                # Tudo igual, desempata pelo ID
+                if idx_s1 < idx_s2
+                    return surgery1
+                end
+                return surgery2
             end
-            return surgery2
         end
     end
 end
