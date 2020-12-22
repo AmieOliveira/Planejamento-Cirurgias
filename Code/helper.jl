@@ -1,10 +1,17 @@
 using Random, Plots, Printf
 #Plots.pyplot()
 
+intervalo_cirurgias = 2
+n_slots = 46
+
 janelas_tempo = [3, 15, 60, 365]
-penalty_timeout = 2
-dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
+penalidades = [90, 20, 8, 3]
 cores_p = [:red, :orange, :yellow, :green]
+
+#penalty_timeout = 2
+
+n_dias = 5
+dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
 function print_solution(instance, solution)
     surgeries, rooms, days, penalties = instance
@@ -239,7 +246,6 @@ function get_room_specialty(instance, solution, room, day)
 end
 
 
-# FIXME: Acrescentar numero de dias no criterio!
 function most_prioritary(surgery1, surgery2)
     idx_s1, p_s1, w_s1, e_s1, g_s1, t_s1 = surgery1
     idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = surgery2
@@ -261,7 +267,7 @@ function most_prioritary(surgery1, surgery2)
 
             if t_s1 < t_s2
                 return surgery1
-            elseif ts_1 > t_s2
+            elseif t_s1 > t_s2
                 return surgery2
             else 
                 # Tudo igual, desempata pelo ID
@@ -303,4 +309,167 @@ function badly_scheduled(surgeries, solution)
     end
 
     return bad
+end
+
+TIMESLOTS = 1
+IDX = 2
+SURGEON = 3
+function surgeries_per_day(instance, solution, n_docs)
+    sc_d, sc_r, sc_h = solution
+    surgeries, rooms, days, penalties = instance
+
+    c_dias = Dict(i => 
+                Dict(j => [Array{Int64}[], Int64[], Int64[]] for j in 1:rooms) 
+                for i in 1:n_dias)
+    docs = Dict( i => Dict(doc => Array{Int64}[] for doc in 1:n_docs) for i in 1:n_dias )
+
+    for s in surgeries
+        idx_s, p_s, w_s, e_s, g_s, t_s = s
+
+        if !(sc_d[idx_s] === nothing)
+
+            dia_s = sc_d[idx_s]
+            sala_s = sc_r[idx_s]
+            hora_s = sc_h[idx_s]
+
+            s_slot = [hora_s, hora_s + t_s - 1]
+
+            push!(c_dias[dia_s][sala_s][TIMESLOTS], s_slot)
+            push!(c_dias[dia_s][sala_s][IDX], idx_s)
+            push!(c_dias[dia_s][sala_s][SURGEON], g_s)
+            
+            d_slot = [hora_s,  hora_s + t_s - 1 + intervalo_cirurgias]
+            push!(docs[sc_d][g_s], d_slot)
+        end
+
+    end
+
+    for d in 1:n_dias
+        for r in 1:rooms
+            permutacao = sortperm( c_dias[d][r][TIMESLOTS], by = x -> x[1] )
+
+            for i in 1:3
+                c_dias[d][r][i] = c_dias[d][r][i][permutacao]
+            end
+
+        end
+
+        for doc in 1:n_docs
+            sort!(docs[d][doc], by = x -> x[1])
+        end
+    end
+
+    return c_dias, docs
+end
+
+function perDay_to_initialFormat(s_daily, n_surgeries)
+    # Função inversa de surgeries_per_day (retorna a 'solution' equivalente)
+    surgs, docs = s_daily
+
+    sc_d = zeros(Int, n_surgeries)
+    sc_r = zeros(Int, n_surgeries)
+    sc_h = zeros(Int, n_surgeries)
+
+    for d in 1:n_dias
+        for r in keys(s_daily[d])
+            for i in 1:length(s_daily[d][r][IDX])
+                idx = s_daily[d][r][IDX][i]
+
+                sc_d[idx] = d
+                sc_r[idx] = r
+                sc_h[idx] = s_daily[d][r][TIMESLOTS][i][1]
+            end
+        end
+    end
+
+    return sc_d, sc_r, sc_h
+end
+
+function intervalClash(interval1, interval2)
+    if interval1[1] > interval2[2]
+        return false
+    elseif interval2[1] > interval2[2]
+        return false
+    end
+    return true
+end
+
+function shuffle_day(dict_cirurgias)
+    surgs, docs = dict_cirurgias
+    rooms =  keys(surgs)
+    ret = copy(surgs)
+    ret_doc = copy(docs)
+
+    for r in rooms
+        if ret[r][TIMESLOTS][1][1] > 1
+            # TODO: deslocar para 1
+        end
+
+        nslots = length(ret[r][IDX])
+        for slot_idx in 2:nslots
+            if ret[r][TIMESLOTS][slot_idx][1] - ret[r][TIMESLOTS][slot_idx-1][2] > intervalo_cirurgias
+                # check surgeon availability. if available, bring closer
+                surgeon = ret[r][SURGEON][slot_idx]
+
+                clash = false
+
+                duration = ret[r][TIMESLOTS][slot_idx][2]-ret[r][TIMESLOTS][slot_idx][1]
+                init = ret[r][TIMESLOTS][slot_idx-1][2] + intervalo_cirurgias
+                fim = min( ret[r][TIMESLOTS][slot_idx][1] - 1, 
+                           init + ret[r][TIMESLOTS][slot_idx][2]-ret[r][TIMESLOTS][slot_idx][1] )
+
+                doctor_slot = nothing
+                last = nothing
+
+                for (i_ds, d_slot) in enumerate(ret_doc[surgeon])
+                    if d_slot[1] == ret[r][TIMESLOTS][slot_idx][1] &&
+                        d_slot[2] == ret[r][TIMESLOTS][slot_idx][2]
+                        doctor_slot = i_ds
+                    end
+                    last = i_ds
+
+                    if d_slot[1] > fim
+                        break
+                    end
+
+                    clash = intervalClash(d_slot, [init, fim])
+                    if clash
+                        break
+                    end
+                end
+                
+                if !( clash )
+                    ret[r][TIMESLOTS][slot_idx] = [init, init + duration]
+                    
+                    if doctor_slot === nothing
+                        for i in last+1:length(ret_doc[surgeon])
+                            if d_slot[1] == ret[r][TIMESLOTS][slot_idx][1] &&
+                                d_slot[2] == ret[r][TIMESLOTS][slot_idx][2]
+                                doctor_slot = i_ds
+                                break
+                            end
+                        end
+                    end
+                    ret_doc[surgeon][doctor_slot] = [init, init + duration]
+                end
+
+                # Por enquanto so estou ajustando por trazer as cirurgias mais para o inicio do dia
+                # TODO: Na real tenho que discutir o algoritmo... tem muitas possibilidades, 
+                # como fazer de maneira eficiente?
+            end
+        end
+    end
+
+    return ret
+end
+
+function shuffle_schedule(instance, solution, n_doctors)
+    c_dias, docs = surgeries_per_day(instance, solution, n_doctors)
+
+    for d in 1:n_dias
+        c_dias[d] = shuffle_day(c_dias[d], docs[d])
+    end
+    
+    sol = perDay_to_initialFormat(c_dias, length(solution[1]))
+    return sol
 end
