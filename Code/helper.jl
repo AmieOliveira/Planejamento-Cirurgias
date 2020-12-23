@@ -441,6 +441,8 @@ function shuffle_day(dict_cirurgias)
                 if !( clash )
                     ret[r][TIMESLOTS][slot_idx] = [init, init + duration]
                     
+                    # TODO: Acho que esqueci de considerar o tempo de limpeza aqui
+
                     if doctor_slot === nothing
                         for i in last+1:length(ret_doc[surgeon])
                             if d_slot[1] == ret[r][TIMESLOTS][slot_idx][1] &&

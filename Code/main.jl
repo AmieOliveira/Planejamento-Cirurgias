@@ -19,7 +19,7 @@ data_dir = "Dados/"
 out_dir = "Soluções/"
 
 # load instance parameters
-data_root = "toy4"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+data_root = "fullrand_1000cirurgias"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
 rooms = 1
 
 days = 5
@@ -58,3 +58,11 @@ fn = target_fn(instance, (sc_d, sc_r, sc_h), true)
 println("Target function: ", fn)
 bad = badly_scheduled(surgeries, solution)
 plot_solution(instance, solution, @sprintf("%s%s-alns", out_dir, data_root))
+
+function timeNaive()
+    @time solve(instance, verbose=false)
+end
+
+function timeALNS()
+    @time alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+end

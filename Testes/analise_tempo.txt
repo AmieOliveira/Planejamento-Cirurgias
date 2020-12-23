@@ -1,0 +1,27 @@
+Análise de tempo de execução do código (estrutura original de dados)
+
+Amanda:
+- Toy4 (do GitHub):
+timeNaive()
+  0.335262 seconds (180.89 k allocations: 9.081 MiB)
+timeALNS()
+  1.830892 seconds (1.18 M allocations: 57.853 MiB, 3.55% gc time)
+
+- 1000 cirurgias:
+timeNaive()
+  7.929526 seconds (63.89 M allocations: 1.832 GiB, 6.92% gc time)
+timeALNS()
+  ---- Indefinido
+
+Vinícius:
+- Toy1:
+naive:  0.263657 seconds
+ALNS: 0.519767 seconds
+
+- Toy4:
+naive: 0.306007 seconds
+ALNS: 0.489656 seconds
+
+- 1000 instancias:
+naive: 4.546059 seconds
+ALNS: ----
