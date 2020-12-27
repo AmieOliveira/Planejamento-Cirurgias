@@ -2,7 +2,7 @@ using Random
 include("helper.jl")
 
 function random_removal(instance, solution)
-    surgeries, rooms, days, penalties = instance
+    surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution)
 
     qt_to_remove = rand(0:2)
@@ -12,6 +12,9 @@ function random_removal(instance, solution)
         end
 
         pos_to_del = rand(1:length(scheduled_surgeries))
+
+        sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
         solution = unschedule_surgery(instance, solution, scheduled_surgeries[pos_to_del])
         deleteat!(scheduled_surgeries, pos_to_del)
     end
@@ -26,10 +29,10 @@ end
 
 # TODO: currently it isn't greedy! should sort surgeries by priority/waiting time
 function greedy_insertion(instance, solution; verbose=false)
-    surgeries, rooms, days, penalties = instance
-    sc_d, sc_r, sc_h, e, sg_tt = solution
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    unscheduled_surgeries = filter(s -> sc_d[s[1]] == nothing, surgeries)
+    unscheduled_surgeries = get_unscheduled_surgeries(solution)
     sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
     if length(unscheduled_surgeries) == 0
@@ -40,7 +43,7 @@ function greedy_insertion(instance, solution; verbose=false)
 
     # TODO: Acrescentar loop para tentar colocar tantas quantas conseguir??
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
-    for d in 1:days
+    for d in 1:DAYS
         if sg_tt[d, g_s] + t_s > 24
             # surgeon busy for day 'd'. try next day
             if verbose
@@ -51,7 +54,6 @@ function greedy_insertion(instance, solution; verbose=false)
 
         for r in 1:rooms
             free_timeslots = get_free_timeslots(instance, solution, r, d)
-            room_specialty = get_room_specialty(instance, solution, r, d)
 
             for (timeslot_start, timeslot_end) in free_timeslots
                 surgeon_busy = false
@@ -74,13 +76,13 @@ function greedy_insertion(instance, solution; verbose=false)
                     continue
                 end
 
-                if room_specialty == e_s || room_specialty === nothing
+                if e[d, r] == e_s || e[d, r] == 0
                     if verbose
-                        println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", room_specialty, ")")
+                        println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", e[d, r], ")")
                     end
                     if t_s + 2 <= (timeslot_end - timeslot_start + 1)
                         if timeslot_start + t_s - 1 <= 46
-                            schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                            solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
 
                             # schedule was successful! end insertion
                             if verbose
@@ -88,11 +90,11 @@ function greedy_insertion(instance, solution; verbose=false)
                                 println("\tcirurgia $(idx_s) foi agendada no dia $(d) na sala $(r) em t = $(sc_h[idx_s])")
                             end
 
-                            return (sc_d, sc_r, sc_h, e, sg_tt)
+                            return solution
                         else
                             # surgery would exceed 46th timeslot. try next timeslot
                             if verbose
-                                println("\tfalha na cirurgia $(idx_s): cirurgia ultrapassaria horario limite (h[r, d] + t_s - 1 = $(timeslot_start) + $(t_s) - 1")
+                                println("\tfalha na cirurgia $(idx_s): cirurgia ultrapassaria horario limite (h[d, r] + t_s - 1 = $(timeslot_start) + $(t_s) - 1")
                             end
                         end
                     else
@@ -104,7 +106,7 @@ function greedy_insertion(instance, solution; verbose=false)
                 else
                     # room scheduled for another specialty. try next room
                     if verbose
-                        println("\tfalha na cirurgia $(idx_s): especialidades diferem (e_s=$(e_s), e_rd=$(room_specialty))")
+                        println("\tfalha na cirurgia $(idx_s): especialidades diferem (e_s=$(e_s), e_rd=$(e[d, r]))")
                     end
                 end
             end
@@ -115,7 +117,7 @@ function greedy_insertion(instance, solution; verbose=false)
 end
 
 function removal(instance, solution, weights)
-    solution = clone_sol(solution)
+    solution = solution
     
     probs = map(x -> x / sum(weights), weights)
     selected_idx = roulette(probs)
@@ -131,7 +133,7 @@ function removal(instance, solution, weights)
 end
 
 function insertion(instance, solution, weights)
-    solution = clone_sol(solution)
+    solution = solution
     
     probs = map(x -> x / sum(weights), weights)
     selected_idx = roulette(probs)
@@ -165,7 +167,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         while iter < SA_max
             iter += 1
 
-            rem_idx, s2 = removal(instance, s, rem_weights)
+            rem_idx, s2 = removal(instance, clone_sol(s), rem_weights)
             ins_idx, s2 = insertion(instance, s2, ins_weights)
 
             rem_freq[rem_idx] += 1
