@@ -75,18 +75,31 @@ if __name__ == '__main__':
 	# Evaluates and prints the target function for this solution
 	target_fn = 0
 	for idx, surgery in df.iterrows():
-		if surgery["Dia (d)"] == -1 or surgery["Sala (r)"] == -1 or surgery["Horário (t)"] == -1:
-			# Surgery isn't scheduled
-			target_fn += PENALTIES[int(surgery["Prioridade (p)"]) - 1]
-		else:
-			# Surgery is scheduled
-			target_fn += (surgery["Dias_espera (w)"] + 2 + surgery["Dia (d)"])
-			print(f"Cirurgia {surgery.name}: {surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']} = {surgery['Dias_espera (w)'] + 2 + surgery['Dia (d)']}")
+		print(f"Cirurgia {idx}:")
+		is_scheduled = (surgery["Dia (d)"] != -1 and surgery["Sala (r)"] != -1 and surgery["Horário (t)"] != -1)
+		exceeded_deadline = (surgery["Dias_espera (w)"] + 2 + surgery["Dia (d)"]) > DEADLINES[int(surgery["Prioridade (p)"]) - 1] + 1
 
-		if (surgery["Dias_espera (w)"] + 2 + surgery["Dia (d)"]) > DEADLINES[int(surgery["Prioridade (p)"]) - 1]:
-			# Surgery exceeding deadline
-			print(f"\tCirurgia {surgery.name}: {surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']} > {DEADLINES[int(surgery['Prioridade (p)']) - 1]} (prazo).")
-			print(f"\tPenalidade: + {PENALTIES[int(surgery['Prioridade (p)'])]}")
-			target_fn += PENALTIES[int(surgery["Prioridade (p)"]) - 1]
+		if surgery['Prioridade (p)'] == 1 and surgery['Dia (d)'] != 1:
+			val = (10 * (surgery['Dias_espera (w)'] + 2)) ** surgery['Dia (d)']
+			target_fn += val
+			print(f"\tsurgery with priority 1 not scheduled for day 1.")
+			print(f"\tpenalty: (10 * ({surgery['Dias_espera (w)']} + 2)) ** {surgery['Dia (d)']} = {val}")
+
+		if is_scheduled:
+			val = (surgery['Dias_espera (w)'] + 2 + surgery['Dia (d)']) ** 2
+			target_fn += val
+			print(f"\t scheduled: ({surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']}) ** 2 = {val}")
+			if exceeded_deadline:
+				val = (surgery['Dias_espera (w)'] + 2 + surgery['Dia (d)'] - DEADLINES[int(surgery['Prioridade (p)']) - 1]) ** 2
+				target_fn += val
+				print(f"\t exceeded deadline! penalty: (({surgery['Dias_espera (w)']} + 2 + {surgery['Dia (d)']}) - {DEADLINES[int(surgery['Prioridade (p)']) - 1]}) ** 2 = {val}")
+		else:
+			val = PENALTIES[int(surgery['Prioridade (p)']) - 1] * (surgery['Dias_espera (w)'] + 7) ** 2
+			target_fn += val
+			print(f"\t not scheduled: {PENALTIES[int(surgery['Prioridade (p)']) - 1]} * ({surgery['Dias_espera (w)']} + 7) ** 2 = {val}")
+			if exceeded_deadline:
+				val = PENALTIES[int(surgery['Prioridade (p)']) - 1] * (surgery['Dias_espera (w)'] + 2 + 7 - DEADLINES[int(surgery['Prioridade (p)']) - 1]) ** 2
+				target_fn += val
+				print(f"\t exceeded deadline! penalty: {PENALTIES[int(surgery['Prioridade (p)']) - 1]} * ({surgery['Dias_espera (w)']} + 2 + 7 - {DEADLINES[int(surgery['Prioridade (p)'])]}) ** 2 = {val}")
 
 	print(f"Target function: {target_fn}")
