@@ -2,6 +2,7 @@ using Random, Plots, Printf
 using DataFrames
 #Plots.pyplot()
 
+# TODO: deixar caps lock
 intervalo_cirurgias = 2
 n_slots = 46
 
@@ -292,13 +293,13 @@ function badly_scheduled(surgeries, solution)
                 #   está implementado o wait-time. Se não fizer 
                 #   isso todas as urgências ficam fora do prazo, 
                 #   mesmo feitas nas segundas
-                @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                # @printf("Cirurgia %s fora de prazo!\n", idx_s)
                 push!(bad, idx_s)
             end
         else
             if w_s + 7 + 2 > janelas_tempo[p_s] + 1
                 # NOTE: Coloco +2 dias para contar com o proximo fds
-                @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                # @printf("Cirurgia %s fora de prazo!\n", idx_s)
                 push!(bad, idx_s)
             end
         end
@@ -314,10 +315,11 @@ function surgeries_per_day(instance, solution, n_docs)
     sc_d, sc_r, sc_h = solution
     surgeries, rooms, days, penalties = instance
 
+    # TODO: Fazer array
     c_dias = Dict(i => 
                 Dict(j => [Array{Int64}[], Int64[], Int64[]] for j in 1:rooms) 
                 for i in 1:n_dias)
-    docs = Dict( i => Dict(doc => Array{Int64}[] for doc in 1:n_docs) for i in 1:n_dias )
+    docs = Dict(i => Dict(doc => Array{Int64}[] for doc in 1:n_docs) for i in 1:n_dias)
 
     for s in surgeries
         idx_s, p_s, w_s, e_s, g_s, t_s = s
