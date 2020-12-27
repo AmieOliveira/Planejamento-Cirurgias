@@ -9,7 +9,6 @@ Trabalho para Meta-heurísticas em Otimização Combinatória (CPS783)
 
 
 ## TODOs:
-- Verificar se esta contanto o tempo semanal dos cirurgioes (NAIVE & ALNS)
 - Verificar o algoritmo guloso: 
 	1. tem que marcar as urgencias na segunda.
 - Acertar a greedy_insertion (testar colocando so um ou tantos quanto o possivel?)
@@ -44,3 +43,4 @@ Inclusive maximizar o espaço livre
 - ~~Verificar se é possível remover sc_d, sc_h, sc_r no ALNS~~
 - ~~Alterar NAIVE para comportar novas estruturas de dados com redundancia (tentar remover sc_d, sc_h, sc_r. acho que será possivel)~~ 
 - ~~Botar penalidades CAPS LOCK~~
+- ~~Verificar se esta contanto o tempo semanal dos cirurgioes (NAIVE & ALNS)~~
