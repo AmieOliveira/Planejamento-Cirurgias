@@ -14,31 +14,31 @@ function load_surgeries(filepath)
     surgeries
 end
 
-# Paths
-data_dir = "Dados/"
-out_dir = "Soluções/"
-
-# load instance parameters
-data_root = "fullrand_1000cirurgias"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
-rooms = 1
-
+# setup
+# -- constants
 days = 5
-penalties = [90, 20, 8, 3] #TODO: these priorities were tweaked. should confirm
-surgeries = load_surgeries(@sprintf("%s%s.csv", data_dir, data_root)) 
+penalties = [90, 20, 8, 3] 
+# -- paths
+data_dir = "../Dados/tests/"
+data_root = "4_inst"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+out_dir = "Soluções/"
+# -- load instance parameters
+surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
+rooms = 2
 
 # Solution set up
 instance = (surgeries, rooms, days, penalties)
-
 solution = solve(instance, verbose=false)
-# TODO: criar dentro dos solvers - room_specialties = zeros(Int, (rooms, days))        # Vetor com as especialidades das salas pelos dias
-
 print_solution(instance, solution)
+solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
+
 println("")
 println("Scheduling costs: ")
 fn = target_fn(instance, solution, true)
 println("Target function: ", fn)
-bad = badly_scheduled(surgeries, solution)
-plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
+
+# bad = badly_scheduled(surgeries, solution)
+# plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
 
 #solution = random_removal(instance, solution)
 #solution = random_removal(instance, solution)
@@ -48,21 +48,21 @@ plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
 #println("")
 #println("Target function: ", fn)
 
-solution = Debugger.@run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
-sc_d, sc_r, sc_h = solution
-println("ALNS solution:", solution)
-print_solution(instance, solution)
-println("")
-println("Scheduling costs: ")
-fn = target_fn(instance, (sc_d, sc_r, sc_h), true)
-println("Target function: ", fn)
-bad = badly_scheduled(surgeries, solution)
-plot_solution(instance, solution, @sprintf("%s%s-alns", out_dir, data_root))
+# solution = Debugger.@run alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+# sc_d, sc_r, sc_h = solution
+# println("ALNS solution:", solution)
+# print_solution(instance, solution)
+# println("")
+# println("Scheduling costs: ")
+# fn = target_fn(instance, (sc_d, sc_r, sc_h), true)
+# println("Target function: ", fn)
+# bad = badly_scheduled(surgeries, solution)
+# plot_solution(instance, solution, @sprintf("%s%s-alns", out_dir, data_root))
 
-function timeNaive()
-    @time solve(instance, verbose=false)
-end
+# function timeNaive()
+#     @time solve(instance, verbose=false)
+# end
 
-function timeALNS()
-    @time alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
-end
+# function timeALNS()
+#     @time alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+# end
