@@ -1,4 +1,5 @@
 using Random, Plots, Printf
+using DataFrames
 #Plots.pyplot()
 
 intervalo_cirurgias = 2
@@ -104,41 +105,36 @@ function plot_solution(instance, solution, filename="teste")
     end
 end
 
-function eval_surgery(surgery, rooms, penalties, scd, verbose)
+function eval_surgery(surgery, rooms, penalties, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
-    scheduled = (scd != nothing)
+    cost = 0
 
-    alpha = 10
-    
-    if scheduled
-        wait = w_s + 2 + scd
-        cost = wait^2 # wait/t_s
+    total_days = w_s + 2 + (day_scheduled == nothing ? 7 : day_scheduled)
+    was_scheduled = (day_scheduled != nothing)
+    exceeded_deadline = (total_days > (janelas_tempo[p_s] + 1))
 
-        if wait > janelas_tempo[p_s] + 1
-            # Penalidade por passar do prazo
-            cost = cost + (wait-janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
-        end
-        
-        if verbose
-            @printf("Surgery %i scheduled with cost: %f\n", idx_s, cost)
-        end
-        return cost
-    else
-        wait = w_s + 7
-        cost = wait^2 * penalties[p_s]# wait/t_s
-
-        if wait + 2 > janelas_tempo[p_s] + 1 
-            # Penalidade por passar do prazo
-            # Somo 2 do proximo final de semana. Ja tenho 
-            # que saber agora que vou passar do prazo
-            cost = cost + (wait + 2 - janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
-        end
-
-        if verbose
-            @printf("Surgery %i not scheduled. Cost: %f\n", idx_s, cost)
-        end
-        return cost
+    if p_s == 1 && day_scheduled != 1
+        cost += (10 * (w_s + 2))^(day_scheduled)
     end
+
+    if was_scheduled
+        cost += total_days^2
+        if exceeded_deadline
+            cost += (total_days - janelas_tempo[p_s])^2
+        end
+    else
+        cost += total_days^2 * penalties[p_s]
+        if exceeded_deadline
+            cost += (total_days - janelas_tempo[p_s])^2 * penalties[p_s]
+        end
+    end
+
+    if verbose
+        str = was_scheduled ? "scheduled" : "not scheduled"
+        println("Surgery $(idx_s) was $(str). Cost: $(cost)")
+    end
+
+    cost
 end
 
 function target_fn(instance, solution, verbose=false)
@@ -474,4 +470,17 @@ function shuffle_schedule(instance, solution, n_doctors)
     
     sol = perDay_to_initialFormat(c_dias, length(solution[1]))
     return sol
+end
+
+function solution_to_csv(output_path, instance, solution)
+    sc_d, sc_r, sc_h = solution
+    surgeries, rooms, days, penalties = instance
+
+    df = DataFrame(
+        Symbol("Cirurgia (c)") => [s[1] for s in surgeries],
+        Symbol("Sala (r)") => [sc_r[s[1]] for s in surgeries],
+        Symbol("Dia (d)") => [sc_d[s[1]] for s in surgeries],
+        Symbol("Horário (t)") => [sc_h[s[1]] for s in surgeries])
+
+    CSV.write(output_path, df, delim=';')
 end
