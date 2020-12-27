@@ -79,7 +79,7 @@ function greedy_insertion(instance, solution)
         for s2 in surgeries
             idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
             if sc_d[idx_s2] == d && g_s2 == g_s
-                total_time_surgeon += t_s2
+                total_time_surgeon += t_s2 + 2
             end
         end # TODO: Having to redo this all the time should also increase running time. 
         # Maybe if we organize in matrixes we can just sum strait from a given day, instead of looping over all surgeries
