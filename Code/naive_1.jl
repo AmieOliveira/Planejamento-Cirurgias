@@ -32,7 +32,7 @@ function solve(instance; verbose=true)
             for s2 in surgeries
                 idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
                 if sc_d[idx_s2] == d && g_s2 == g_s
-                    total_time_surgeon += t_s2
+                    total_time_surgeon += t_s2 + 2
                 end
             end
             if total_time_surgeon + t_s > 24

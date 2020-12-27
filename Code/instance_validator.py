@@ -43,8 +43,9 @@ if __name__ == '__main__':
 		surgeons = set(df.loc[df["Dia (d)"] == day]["Cirurgião (h)"].values)
 		for surgeon in surgeons:
 			durations = df.loc[(df["Dia (d)"] == day) & (df["Cirurgião (h)"] == surgeon)]["Duração (tc)"].values
-			if np.sum(durations) > 24:
-				print(f"Surgeon {surgeon} exceeds his time limit of 24 timesteps at day {day}. Actual duration: {np.sum(durations)}.")
+			total_time = np.sum(durations) + 2 * (len(durations) - 1)
+			if total_time > 24:
+				print(f"Surgeon {surgeon} exceeds his time limit of 24 timesteps at day {day}. Actual duration: {total_time}.")
 
 	# Check if some surgeon has overlapping surgeries
 	for day in range(1, 5+1):
