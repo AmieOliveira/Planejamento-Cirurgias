@@ -1,8 +1,5 @@
-using Random, Plots, Printf
-using DataFrames
-#Plots.pyplot()
+using Random
 
-# TODO: deixar caps lock
 LENGTH_INTERVAL = 2
 LENGTH_DAY = 46
 
@@ -10,116 +7,8 @@ DEADLINES = [3, 15, 60, 365]
 PENALTIES = [90, 20, 8, 1]
 COLORS_P = [:red, :orange, :yellow, :green]
 
-#penalty_timeout = 2
-
 DAYS = 5
 DAY_NAMES = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
-
-function print_solution(instance, solution)
-    surgeries, rooms = instance
-    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
-
-    println("dias: ", sc_d)
-    println("salas: ", sc_r)
-    println("horas: ", sc_h)
-    println("scheduled timeslots: ")
-    display(sc_ts)
-
-    for d in 1:DAYS
-        println("")
-        println("day ", d)
-        print("--------")
-        print("|")
-
-        for t in 1:46
-            if t < 10
-                print(" ")
-            end
-            print(t, "|")
-        end
-
-        println("")
-        for r in 1:rooms
-            print("room ", r, ": ")
-            
-            for t in 1:46
-                print("|")
-                found_surgery = false
-                for s in surgeries
-                    idx_s, p_s, w_s, e_s, g_s, t_s = s
-                    if sc_d[idx_s] == d && sc_r[idx_s] == r && t >= sc_h[idx_s] && t < (sc_h[idx_s] + t_s)
-                        if idx_s < 10
-                            print(" ")
-                        end
-                        print(idx_s)
-                        found_surgery = true
-                        break
-                    end
-                end
-                if !found_surgery
-                    print("  ")
-                end
-            end
-
-            println("|")
-        end
-    end
-end
-
-function solution_to_csv(output_path, instance, solution)
-    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
-    surgeries, rooms = instance
-
-    df = DataFrame(
-        Symbol("Cirurgia (c)") => [s[1] for s in surgeries],
-        Symbol("Sala (r)") => [sc_r[s[1]] for s in surgeries],
-        Symbol("Dia (d)") => [sc_d[s[1]] for s in surgeries],
-        Symbol("Horário (t)") => [sc_h[s[1]] for s in surgeries])
-
-    CSV.write(output_path, df, delim=';', transform=(col, val) -> something(val, -1))
-end
-
-function rectangle(w, h, x, y)
-    return Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
-end
-
-function plot_solution(instance, solution, filename="teste")
-    # TODO: Mudança de cores
-    surgeries, rooms = instance
-    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
-
-    dayPeriods = 46
-
-    for r in 1:rooms
-    #fig = figure()
-        pls = Any[]
-        for d in 1:DAYS
-            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
-            #hline()
-            yaxis!(p, DAY_NAMES[d])#, showaxis=false)
-            texts = []
-            for s in surgeries
-                idx_s, p_s, w_s, e_s, g_s, t_s = s
-                if sc_d[idx_s] == d && sc_r[idx_s] == r
-                    s_label = @sprintf("Cirurgia %i", idx_s)
-                    plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label, color=COLORS_P[p_s])
-                    annotate!(sc_h[idx_s]+.5, 0.5, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
-                end
-            end
-            if d == 1
-                title!(@sprintf("Sala %i", r))
-            elseif d == DAYS
-                xaxis!("Tempo (períodos)")
-            end
-            push!(pls, p)
-        end
-
-        # TODO: Como fazer sem ter que especificar cada plot?
-        plot(pls[1], pls[2], pls[3], pls[4], pls[5], layout = (DAYS, 1), legend = false)#, legend = false)
-        savefig(@sprintf("%s-%isalas-sala%i.pdf",filename, rooms, r))
-        #close(fig)
-    end
-end
 
 function eval_surgery(surgery, rooms, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
@@ -179,9 +68,7 @@ function roulette(probs)
     return length(probs)
 end
 
-# TODO: is it expensive?
 function clone_sol(solution)
-    # [copy(data_structure) for data_structure in solution]
     (copy(solution[1]), copy(solution[2]), copy(solution[3]), copy(solution[4]), copy(solution[5]), deepcopy(solution[6]))
 end
 
@@ -205,6 +92,38 @@ function get_number_of_surgeons(instance)
     maximum([g_s for (_, _, _, _, g_s, _) in surgeries])
 end
 
+function can_surgeon_fit_surgery_in_week(instance, solution, surgery)
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+    sum(sg_tt[:, g_s]) + t_s <= 100
+end
+
+function can_surgeon_fit_surgery_in_day(instance, solution, surgery, day)
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+    sg_tt[day, g_s] + t_s <= 24
+end
+
+function can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, day, timeslot_start, timeslot_end)
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+    for s2 in surgeries
+        idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
+        if sc_d[idx_s2] == day
+            s2_start = sc_h[idx_s2]
+            s2_end = sc_h[idx_s2] + t_s2
+            if g_s2 == g_s && timeslot_start <= s2_end && s2_start <= timeslot_end
+                return false
+            end
+        end
+    end
+
+    return true
+end
+
 function unschedule_surgery(instance, solution, surgery)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
@@ -222,7 +141,6 @@ function unschedule_surgery(instance, solution, surgery)
         e[d, r] = 0
     end
 
-    #TODO: make e[d, r] = 0 if no more surgeries in the same day
     (sc_d, sc_r, sc_h, e, sg_tt, sc_ts)
 end
 
@@ -237,7 +155,7 @@ function schedule_surgery(instance, solution, surgery, day, room, timeslot)
     e[day, room] = e_s
 
     if length(filter(ts -> ts[3] == idx_s, sc_ts[day, room])) > 0
-        println("THIS SHOULD NOT BE HAPPENING")
+        println("Same surgery counting more than once! This should not be happening!!")
     end
 
     push!(sc_ts[day, room], [sc_h[idx_s], sc_h[idx_s] + t_s - 1 + 2, idx_s, g_s])

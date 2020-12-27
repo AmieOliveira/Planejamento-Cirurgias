@@ -3,7 +3,7 @@ include("helper.jl")
 function solve(instance; verbose=true)
     surgeries, rooms = instance
 
-    sort!(surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
+    sort!(surgeries, lt = (x, y) -> is_more_prioritary(x, y))
 
     h = ones(Int, DAYS, rooms) # h[i, j] stores the first available hour in room 'i' and day 'j'
 
@@ -30,7 +30,7 @@ function solve(instance; verbose=true)
                 break
             end
 
-            if sg_tt[d, g_s] + t_s > 24
+            if !can_surgeon_fit_surgery_in_day(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d)
                 # cirurgiao ocupado para o dia 'd'. tentar no proximo dia
                 if verbose
                     println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para o dia ", d, ". tentar no proximo dia")
@@ -38,18 +38,16 @@ function solve(instance; verbose=true)
                 continue
             end
 
-            for r in 1:rooms
-                surgeon_busy = false
-                for s2 in surgeries
-                    idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
-                    if sc_d[idx_s2] == d
-                        if g_s2 == g_s && h[d, r] >= sc_h[idx_s2] && h[d, r] <= sc_h[idx_s2] + t_s2
-                            surgeon_busy = true
-                            break
-                        end
-                    end
+            if !can_surgeon_fit_surgery_in_week(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s)
+                # cirurgiao ocupado para o dia 'd'. tentar no proximo dia
+                if verbose
+                    println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para a semana. tentar no proximo dia")
                 end
-                if surgeon_busy
+                continue
+            end
+
+            for r in 1:rooms
+                if !can_surgeon_fit_surgery_timeslot(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d, h[d, r], h[d, r])
                     # cirurgiao ocupado naquele momento. tentar na proxima sala
                     if verbose
                         println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado naquele momento. tentar na proxima sala")

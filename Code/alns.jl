@@ -27,7 +27,6 @@ function worst_removal(instance, solution)
     return random_removal(instance, solution)
 end
 
-# TODO: currently it isn't greedy! should sort surgeries by priority/waiting time
 function greedy_insertion(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
@@ -35,78 +34,33 @@ function greedy_insertion(instance, solution; verbose=false)
     unscheduled_surgeries = get_unscheduled_surgeries(solution)
     sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
-    if length(unscheduled_surgeries) == 0
-        return solution
-    end
+    for surgery in unscheduled_surgeries
+        idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
-    surgery = unscheduled_surgeries[1]
-
-    # TODO: Acrescentar loop para tentar colocar tantas quantas conseguir??
-    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
-    for d in 1:DAYS
-        if sg_tt[d, g_s] + t_s > 24
-            # surgeon busy for day 'd'. try next day
-            if verbose
-                println("\tfalha na cirurgia $(idx_s): cirurgiao $(g_s) ocupado para o dia $(d). tentar no proximo dia")
-            end
+        if !can_surgeon_fit_surgery_in_week(instance, solution, surgery)
             continue
         end
 
-        for r in 1:rooms
-            free_timeslots = get_free_timeslots(instance, solution, r, d)
+        for d in 1:DAYS
+            if !can_surgeon_fit_surgery_in_day(instance, solution, surgery, d)
+                continue
+            end
 
-            for (timeslot_start, timeslot_end) in free_timeslots
-                surgeon_busy = false
-                for s2 in surgeries
-                    idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
-                    if sc_d[idx_s2] == d
-                        s2_start = sc_h[idx_s2]
-                        s2_end = sc_h[idx_s2] + t_s2
-                        if g_s2 == g_s && timeslot_start <= s2_end && s2_start <= timeslot_end
-                            surgeon_busy = true
-                            break
-                        end
+            for r in 1:rooms
+                free_timeslots = get_free_timeslots(instance, solution, r, d)
+
+                for (timeslot_start, timeslot_end) in free_timeslots
+                    if !can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, d, timeslot_start, timeslot_end)
+                        continue
                     end
-                end
-                if surgeon_busy
-                    # surgeon busy at that time. try next room
-                    if verbose
-                        println("\tfalha na cirurgia $(idx_s): cirurgiao $(g_s) ocupado naquele momento. tentar na proxima sala")
-                    end
-                    continue
-                end
 
-                if e[d, r] == e_s || e[d, r] == 0
-                    if verbose
-                        println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", e[d, r], ")")
-                    end
-                    if t_s + 2 <= (timeslot_end - timeslot_start + 1)
-                        if timeslot_start + t_s - 1 <= 46
-                            solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
-
-                            # schedule was successful! end insertion
-                            if verbose
-                                println("\ttimeslot: [$(timeslot_start), $(timeslot_end)], t_s + 2: $(t_s) + 2")
-                                println("\tcirurgia $(idx_s) foi agendada no dia $(d) na sala $(r) em t = $(sc_h[idx_s])")
-                            end
-
-                            return solution
-                        else
-                            # surgery would exceed 46th timeslot. try next timeslot
-                            if verbose
-                                println("\tfalha na cirurgia $(idx_s): cirurgia ultrapassaria horario limite (h[d, r] + t_s - 1 = $(timeslot_start) + $(t_s) - 1")
+                    if e[d, r] == e_s || e[d, r] == 0
+                        if t_s + 2 <= (timeslot_end - timeslot_start + 1)
+                            if timeslot_start + t_s - 1 <= 46
+                                solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                                return solution
                             end
                         end
-                    else
-                        # surgery would exceed current timeslot. try next timeslot
-                        if verbose
-                            println("\tfalha na cirurgia $(idx_s): cirurgia de tamanho $(t_s + 2) não cabe no timeslot [$(timeslot_start), $(timeslot_end)].")
-                        end
-                    end
-                else
-                    # room scheduled for another specialty. try next room
-                    if verbose
-                        println("\tfalha na cirurgia $(idx_s): especialidades diferem (e_s=$(e_s), e_rd=$(e[d, r]))")
                     end
                 end
             end

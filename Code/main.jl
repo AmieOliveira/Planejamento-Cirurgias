@@ -2,6 +2,7 @@ using CSV, DataFrames, Printf
 using Debugger
 
 include("helper.jl")
+include("io.jl")
 include("naive_1.jl")
 include("alns.jl")
 
@@ -16,15 +17,15 @@ end
 
 # setup
 # -- paths
-# data_dir = "../Dados/tests/"
-# data_root = "4_inst"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
-data_dir = "../Dados/"
-data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+data_dir = "../Dados/tests/"
+data_root = "1_inst"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+# data_dir = "../Dados/"
+# data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
 
 out_dir = "Soluções/"
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 2
+rooms = 1
 
 # Solution set up
 instance = (surgeries, rooms)
