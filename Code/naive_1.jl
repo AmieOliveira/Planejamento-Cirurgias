@@ -2,11 +2,12 @@ include("helper.jl")
 
 function solve(instance; verbose=true)
     surgeries, rooms, days, penalties = instance
-    
-    sort!(surgeries, lt = (x, y) -> is_more_prioritary(x, y))
+
+    sort!(surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
     h = ones(Int, rooms, days) # h[i, j] stores the first available hour in room 'i' and day 'j'
     e = zeros(Int, rooms, days) # e[i, j] stores the specialty in room 'i' and day 'j'
+    sg_tt = zeros(Int, days, get_number_of_surgeons(instance)) # sg_tt[i, j] stores the total time scheduled for the surgeon 'j' at day 'i'
     
     # solution vectors
     sc_d = Vector{Union{Nothing, Int64}}(nothing, length(surgeries)) # schedule days
@@ -28,14 +29,7 @@ function solve(instance; verbose=true)
                 break
             end
 
-            total_time_surgeon = 0
-            for s2 in surgeries
-                idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
-                if sc_d[idx_s2] == d && g_s2 == g_s
-                    total_time_surgeon += t_s2 + 2
-                end
-            end
-            if total_time_surgeon + t_s > 24
+            if sg_tt[d, g_s] + t_s > 24
                 # cirurgiao ocupado para o dia 'd'. tentar no proximo dia
                 if verbose
                     println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para o dia ", d, ". tentar no proximo dia")
@@ -73,6 +67,9 @@ function solve(instance; verbose=true)
                         
                         e[r, d] = e_s
                         h[r, d] = min(h[r, d] + t_s + 2, 46)
+
+                        sg_tt[d, g_s] += t_s + 2
+
                         # cirurgia foi agendada. passar pra proxima cirurgia
                         if verbose
                             println("\tcirurgia ", idx_s, " foi agendada no dia ", d, " na sala ", r, " em t = ", sc_h[idx_s])
@@ -94,5 +91,5 @@ function solve(instance; verbose=true)
         end
     end
 
-    sc_d, sc_r, sc_h
+    sc_d, sc_r, sc_h, e, sg_tt
 end

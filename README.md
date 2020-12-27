@@ -9,12 +9,12 @@ Trabalho para Meta-heurísticas em Otimização Combinatória (CPS783)
 
 
 ## TODOs:
-- Ajustar a funcao eval_function para refletir a F.O. final (do Cleiton)
+~~- Ajustar a funcao eval_function para refletir a F.O. final (do Cleiton)~~
 ~~- Parar de enviar as penalidades como argumento das instancias? (ja que vamos ter que sempre usar as mesmas)~~ 
 - Análise do tempo: botar um timer pra computar quanto tempo está demorando pra rodar
 	- Rodar pra um toy e pra uma instância de 1000 cirurgias, e pra uma de 10000 cirurgias. Como o tempo evolui?
-- Produzir output CSV com a solução
-- Verificar se o tempo dos cirurgioes esta contando com o tempo de limpeza (isso pode ser considerado como o tempo que ele precisa entre uma cirurgia e outra). (NAIVE & ALNS)
+~~- Produzir output CSV com a solução~~
+~~- Verificar se o tempo dos cirurgioes esta contando com o tempo de limpeza (isso pode ser considerado como o tempo que ele precisa entre uma cirurgia e outra). (NAIVE & ALNS)~~
 - Verificar se esta contanto o tempo semanal dos cirurgioes (NAIVE & ALNS)
 - Verificar o algoritmo guloso: 
 	1. tem que marcar as urgencias na segunda.

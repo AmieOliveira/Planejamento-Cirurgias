@@ -3,7 +3,7 @@ include("helper.jl")
 
 function random_removal(instance, solution)
     surgeries, rooms, days, penalties = instance
-    scheduled_surgeries = get_scheduled_surgeries_list(solution)
+    scheduled_surgeries = get_scheduled_surgeries(solution)
 
     qt_to_remove = rand(0:2)
     for _ in 1:qt_to_remove
@@ -12,7 +12,7 @@ function random_removal(instance, solution)
         end
 
         pos_to_del = rand(1:length(scheduled_surgeries))
-        solution = unschedule_surgery(solution, scheduled_surgeries[pos_to_del])
+        solution = unschedule_surgery(instance, solution, scheduled_surgeries[pos_to_del])
         deleteat!(scheduled_surgeries, pos_to_del)
     end
 
@@ -25,65 +25,23 @@ function worst_removal(instance, solution)
 end
 
 # TODO: currently it isn't greedy! should sort surgeries by priority/waiting time
-function greedy_insertion(instance, solution)
+function greedy_insertion(instance, solution; verbose=false)
     surgeries, rooms, days, penalties = instance
-    sc_d, sc_r, sc_h = solution
-    verbose = false
+    sc_d, sc_r, sc_h, e, sg_tt = solution
 
-    #surgery = nothing
-    surgeries_ordered = nothing
-    for s in surgeries
-        idx_s, p_s, w_s, e_s, g_s, t_s = s
-        if sc_d[idx_s] ≡ nothing
-            #surgery = s
-            if verbose
-                println("tentando agendar cirurgia $(idx_s)")
-            end
-            if surgeries_ordered ≡ nothing
-                surgeries_ordered = [s]
-            else
-                # TODO: Provavelmente tem uma maneira mais rápida e eficiente de ordenar!
-                # TODO: TESTAR! MAS PARA ISSO TENHO QUE CORRIGIR A 'most_prioritary'
-                pushed = false
-                if most_prioritary(s, surgeries_ordered[1]) === s
-                    append!([s], surgeries_ordered)
-                end
-                lso = length(surgeries_ordered)
-                for i in 1:(lso-1)
-                    so1 = surgeries_ordered[i]
-                    so2 = surgeries_ordered[i+1]
-                    idx_so1, p_so1, w_so1, e_so1, g_so1, t_so1 = so1
-                    idx_so2, p_so2, w_so2, e_so2, g_so2, t_so2 = so2
+    unscheduled_surgeries = filter(s -> sc_d[s[1]] == nothing, surgeries)
+    sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
-                    if most_prioritary(s, so1) == so1 && most_prioritary(s, so2) == so2
-                        insert!(surgeries_ordered, i+1, s)
-                    end
-                end
-                if pushed == false
-                    push!(surgeries_ordered, s)
-                end
-            end
-        end
-    end
-
-    if surgeries_ordered ≡ nothing #TODO: should check next surgery according to priority
+    if length(unscheduled_surgeries) == 0
         return solution
     end
 
+    surgery = unscheduled_surgeries[1]
+
     # TODO: Acrescentar loop para tentar colocar tantas quantas conseguir??
-    surgery = surgeries_ordered[1]
-    
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
     for d in 1:days
-        total_time_surgeon = 0
-        for s2 in surgeries
-            idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
-            if sc_d[idx_s2] == d && g_s2 == g_s
-                total_time_surgeon += t_s2 + 2
-            end
-        end # TODO: Having to redo this all the time should also increase running time. 
-        # Maybe if we organize in matrixes we can just sum strait from a given day, instead of looping over all surgeries
-        if total_time_surgeon + t_s > 24
+        if sg_tt[d, g_s] + t_s > 24
             # surgeon busy for day 'd'. try next day
             if verbose
                 println("\tfalha na cirurgia $(idx_s): cirurgiao $(g_s) ocupado para o dia $(d). tentar no proximo dia")
@@ -122,17 +80,15 @@ function greedy_insertion(instance, solution)
                     end
                     if t_s + 2 <= (timeslot_end - timeslot_start + 1)
                         if timeslot_start + t_s - 1 <= 46
-                            sc_d[idx_s] = d
-                            sc_r[idx_s] = r
-                            sc_h[idx_s] = timeslot_start
-                            
+                            schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+
                             # schedule was successful! end insertion
                             if verbose
                                 println("\ttimeslot: [$(timeslot_start), $(timeslot_end)], t_s + 2: $(t_s) + 2")
                                 println("\tcirurgia $(idx_s) foi agendada no dia $(d) na sala $(r) em t = $(sc_h[idx_s])")
                             end
 
-                            return (sc_d, sc_r, sc_h)
+                            return (sc_d, sc_r, sc_h, e, sg_tt)
                         else
                             # surgery would exceed 46th timeslot. try next timeslot
                             if verbose

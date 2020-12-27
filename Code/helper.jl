@@ -17,7 +17,7 @@ dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
 function print_solution(instance, solution)
     surgeries, rooms, days, penalties = instance
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
 
     println("dias: ", sc_d)
     println("salas: ", sc_r)
@@ -64,6 +64,19 @@ function print_solution(instance, solution)
     end
 end
 
+function solution_to_csv(output_path, instance, solution)
+    sc_d, sc_r, sc_h, e, sg_tt = solution
+    surgeries, rooms, days, penalties = instance
+
+    df = DataFrame(
+        Symbol("Cirurgia (c)") => [s[1] for s in surgeries],
+        Symbol("Sala (r)") => [sc_r[s[1]] for s in surgeries],
+        Symbol("Dia (d)") => [sc_d[s[1]] for s in surgeries],
+        Symbol("Horário (t)") => [sc_h[s[1]] for s in surgeries])
+
+    CSV.write(output_path, df, delim=';')
+end
+
 function rectangle(w, h, x, y)
     return Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
 end
@@ -71,7 +84,7 @@ end
 function plot_solution(instance, solution, filename="teste")
     # TODO: Mudança de cores
     surgeries, rooms, days, penalties = instance
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
 
     dayPeriods = 46
 
@@ -115,7 +128,11 @@ function eval_surgery(surgery, rooms, penalties, day_scheduled, verbose)
     exceeded_deadline = (total_days > (janelas_tempo[p_s] + 1))
 
     if p_s == 1 && day_scheduled != 1
-        cost += (10 * (w_s + 2))^(day_scheduled)
+        if was_scheduled
+            cost += (10 * (w_s + 2)) ^ (day_scheduled)
+        else
+            cost += (10 * (w_s + 2)) ^ (7)
+        end
     end
 
     if was_scheduled
@@ -140,11 +157,11 @@ end
 
 function target_fn(instance, solution, verbose=false)
     surgeries, rooms, days, penalties = instance
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
 
     total = 0
     for s in surgeries
-        # println("f$(s) = $(eval_surgery(s, rooms, penalties, sc_d, sc_r, sc_h))")
+        # println("f$(s) = $(eval_surgery(s, rooms, penalties, sc_d, sc_r, sc_h, e, sg_tt))")
         total += eval_surgery(s, rooms, penalties, sc_d[s[1]], verbose)
     end
     
@@ -166,12 +183,13 @@ end
 
 # TODO: is it expensive?
 function clone_sol(solution)
-    (copy(solution[1]), copy(solution[2]), copy(solution[3]))
+    [copy(data_structure) for data_structure in solution]
 end
 
-function get_scheduled_surgeries_list(solution)
-    sc_d, sc_r, sc_h = solution
-    [idx for (idx, d) in enumerate(sc_d) if d != nothing]
+function get_scheduled_surgeries(solution)
+    sc_d, sc_r, sc_h, e, sg_tt = solution
+    # [idx for (idx, d) in enumerate(sc_d) if d != nothing]
+    filter(s -> sc_d[s[1]] != nothing, surgeries)
 end
 
 function get_surgery(instance, id)
@@ -179,19 +197,43 @@ function get_surgery(instance, id)
     surgeries[id]
 end
 
-function unschedule_surgery(solution, idx)
-    sc_d, sc_r, sc_h = clone_sol(solution)
-    sc_d[idx] = nothing
-    sc_r[idx] = nothing
-    sc_h[idx] = nothing
-    (sc_d, sc_r, sc_h)
+function get_number_of_surgeons(instance)
+    surgeries, rooms, days, penalties = instance
+    maximum([g_s for (_, _, _, _, g_s, _) in surgeries])
+end
+
+function unschedule_surgery(instance, solution, surgery)
+    surgeries, rooms, days, penalties = instance
+    sc_d, sc_r, sc_h, e, sg_tt = solution
+    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+    d, r = sc_d[idx_s], sc_r[idx_s]
+
+    sg_tt[d, g_s] -= t_s + 2
+    sc_d[idx_s] = nothing
+    sc_r[idx_s] = nothing
+    sc_h[idx_s] = nothing
+
+    (sc_d, sc_r, sc_h, e, sg_tt)
+end
+
+function schedule_surgery(instance, solution, surgery, day, room, timeslot)
+    sc_d, sc_r, sc_h, e, sg_tt = solution
+    idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+    sc_d[idx_s] = day
+    sc_r[idx_s] = room
+    sc_h[idx_s] = timeslot
+    sg_tt[day, g_s] += t_s + 2
+
+    (sc_d, sc_r, sc_h, e, sg_tt)
 end
 
 # TODO: this should be done in an internal data structure in the algorithm, for this computation is
 # not trivial and could be easily avoided if we constructed the "timeslots" data structure
 # during the algorithm.
 function get_free_timeslots(instance, solution, room, day)
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
     surgeries, rooms, days, penalties = instance
 
     timeslots = zeros(46 + 1)
@@ -229,7 +271,7 @@ end
 # not trivial and could be easily avoided if we constructed the "room specialty" data structure
 # during the algorithm.
 function get_room_specialty(instance, solution, room, day)
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
     surgeries, rooms, days, penalties = instance
 
     for s in surgeries
@@ -282,7 +324,7 @@ function is_more_prioritary(surgery1, surgery2)
 end
 
 function badly_scheduled(surgeries, solution)
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
     bad = []
 
     for s in surgeries
@@ -312,7 +354,7 @@ TIMESLOTS = 1
 IDX = 2
 SURGEON = 3
 function surgeries_per_day(instance, solution, n_docs)
-    sc_d, sc_r, sc_h = solution
+    sc_d, sc_r, sc_h, e, sg_tt = solution
     surgeries, rooms, days, penalties = instance
 
     # TODO: Fazer array
@@ -380,7 +422,7 @@ function perDay_to_initialFormat(s_daily, n_surgeries)
         end
     end
 
-    return sc_d, sc_r, sc_h
+    return sc_d, sc_r, sc_h, e, sg_tt
 end
 
 function intervalClash(interval1, interval2)
@@ -472,17 +514,4 @@ function shuffle_schedule(instance, solution, n_doctors)
     
     sol = perDay_to_initialFormat(c_dias, length(solution[1]))
     return sol
-end
-
-function solution_to_csv(output_path, instance, solution)
-    sc_d, sc_r, sc_h = solution
-    surgeries, rooms, days, penalties = instance
-
-    df = DataFrame(
-        Symbol("Cirurgia (c)") => [s[1] for s in surgeries],
-        Symbol("Sala (r)") => [sc_r[s[1]] for s in surgeries],
-        Symbol("Dia (d)") => [sc_d[s[1]] for s in surgeries],
-        Symbol("Horário (t)") => [sc_h[s[1]] for s in surgeries])
-
-    CSV.write(output_path, df, delim=';')
 end
