@@ -17,15 +17,15 @@ end
 
 # setup
 # -- paths
-data_dir = "../Dados/tests/"
-data_root = "1_inst"    # "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+data_dir = "Dados/"
 # data_dir = "../Dados/"
-# data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
+data_root = "toy1"    # "fullrand_1000cirurgias"
 
 out_dir = "Soluções/"
+
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 1
+rooms = 2
 
 # Solution set up
 instance = (surgeries, rooms)
@@ -36,14 +36,13 @@ println("")
 println("Scheduling costs: ")
 fn = target_fn(instance, solution, true)
 println("Target function: ", fn)
-
-# bad = badly_scheduled(surgeries, solution)
+# bad = get_badly_scheduled_surgeries(surgeries, solution)
 # plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
 
-solution = random_removal(instance, solution)
-solution = random_removal(instance, solution)
-solution = random_removal(instance, solution)
-solution = random_removal(instance, solution)
+#solution = random_removal(instance, solution)
+#solution = random_removal(instance, solution)
+#solution = random_removal(instance, solution)
+#solution = random_removal(instance, solution)
 #print_solution(instance, solution)
 #fn = target_fn(instance, solution)
 #println("")
@@ -57,14 +56,5 @@ println("")
 println("Scheduling costs: ")
 fn = target_fn(instance, solution, true)
 println("Target function: ", fn)
-
-# bad = badly_scheduled(surgeries, solution)
+# bad = get_badly_scheduled_surgeries(surgeries, solution)
 # plot_solution(instance, solution, @sprintf("%s%s-alns", out_dir, data_root))
-
-# function timeNaive()
-#     @time solve(instance, verbose=false)
-# end
-
-# function timeALNS()
-#     @time alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
-# end

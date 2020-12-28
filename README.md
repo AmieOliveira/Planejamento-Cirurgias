@@ -42,7 +42,10 @@ tempo de limpeza), a cirurgia e o cirurgião.
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção
 	- Fazer operadores de remoção que remove mais de 1? Testar no fim
-- Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
+    - Fazer operadores de inserção/remoção retornarem o valor da F.O.? (Avaliar)
+- Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
+ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
+- Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
 
 ---
 

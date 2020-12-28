@@ -3,7 +3,7 @@ include("helper.jl")
 
 function random_removal(instance, solution)
     surgeries, rooms = instance
-    scheduled_surgeries = get_scheduled_surgeries(solution)
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
 
     qt_to_remove = rand(0:2)
     for _ in 1:qt_to_remove
@@ -22,11 +22,38 @@ function random_removal(instance, solution)
     solution
 end
 
-# TODO: include this and shaw removal
+# TODO
+IDX_S = 1
 function worst_removal(instance, solution)
-    return random_removal(instance, solution)
+    surgeries, rooms = instance
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+    
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    # qt_to_remove ?
+
+    wIdx = 1
+    wValue = eval_surgery(scheduled_surgeries[1], rooms, sc_d[scheduled_surgeries[1][IDX_S]], false)
+    
+    for i in 2:length(scheduled_surgeries)
+        v = eval_surgery(scheduled_surgeries[i], rooms, sc_d[scheduled_surgeries[i][IDX_S]], false)
+
+        if v > wValue
+            wIdx = i
+            wValue = v
+        end
+    end
+
+    ret = unschedule_surgery(instance, solution, scheduled_surgeries[wIdx])
+    # addedValue = eval_surgery(scheduled_surgeries[wIdx], rooms, sc_d[scheduled_surgeries[wIdx][IDX_S]], false)
+
+    return ret
 end
 
+# TODO: Shaw removal
+# o Que mais?
+
+# TODO: insert as many as possible?
 function greedy_insertion(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
@@ -58,7 +85,7 @@ function greedy_insertion(instance, solution; verbose=false)
                         if t_s + 2 <= (timeslot_end - timeslot_start + 1)
                             if timeslot_start + t_s - 1 <= 46
                                 solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
-                                return solution
+                                #return solution
                             end
                         end
                     end
@@ -69,6 +96,9 @@ function greedy_insertion(instance, solution; verbose=false)
 
     return solution
 end
+
+# TODO: insercao por arrependimento
+# o que mais?
 
 function removal(instance, solution, weights)
     solution = solution

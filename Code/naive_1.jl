@@ -41,13 +41,13 @@ function solve(instance; verbose=true)
             if !can_surgeon_fit_surgery_in_week(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s)
                 # cirurgiao ocupado para o dia 'd'. tentar no proximo dia
                 if verbose
-                    println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para a semana. tentar no proximo dia")
+                    println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado para a semana.")
                 end
-                continue
+                break
             end
 
             for r in 1:rooms
-                if !can_surgeon_fit_surgery_timeslot(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d, h[d, r], h[d, r])
+                if !can_surgeon_fit_surgery_in_timeslot(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d, h[d, r], h[d, r])
                     # cirurgiao ocupado naquele momento. tentar na proxima sala
                     if verbose
                         println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado naquele momento. tentar na proxima sala")
@@ -59,15 +59,15 @@ function solve(instance; verbose=true)
                     if verbose
                         println("\t(e_s=", e_s, ", e[", r, ", ", d, "]=", e[d, r], ")")
                     end
-                    if h[d, r] + t_s - 1 <= 46
+                    if h[d, r] + t_s - 1 <= LENGTH_DAY
                         sc_d[idx_s] = d
                         sc_r[idx_s] = r
                         sc_h[idx_s] = h[d, r]
-                        sg_tt[d, g_s] += t_s + 2
+                        sg_tt[d, g_s] += t_s + LENGTH_INTERVAL
                         e[d, r] = e_s
-                        push!(sc_ts[d, r], [sc_h[idx_s], sc_h[idx_s] + t_s - 1 + 2, idx_s, g_s])
+                        push!(sc_ts[d, r], [sc_h[idx_s], sc_h[idx_s] + t_s - 1 + LENGTH_INTERVAL, idx_s, g_s])
                         
-                        h[d, r] = min(h[d, r] + t_s + 2, 46)
+                        h[d, r] = min(h[d, r] + t_s + LENGTH_INTERVAL, LENGTH_DAY)
 
                         # cirurgia foi agendada. passar pra proxima cirurgia
                         if verbose

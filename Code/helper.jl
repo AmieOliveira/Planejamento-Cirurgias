@@ -8,29 +8,30 @@ PENALTIES = [90, 20, 8, 1]
 COLORS_P = [:red, :orange, :yellow, :green]
 
 DAYS = 5
+WEEKEND = 2
 DAY_NAMES = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
 function eval_surgery(surgery, rooms, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
     is_scheduled = (day_scheduled != nothing)
-    total_days = w_s + 2 + (is_scheduled ? day_scheduled : 7)
+    total_days = w_s + WEEKEND + (is_scheduled ? day_scheduled : 7)
     exceeded_deadline = (total_days > (DEADLINES[p_s] + 1))
     cost = 0
 
     if p_s == 1 && day_scheduled != 1
-        cost += (10 * (w_s + 2)) ^ (is_scheduled ? day_scheduled : 7)
+        cost += (10 * (w_s + WEEKEND)) ^ (is_scheduled ? day_scheduled : 7)
     end
 
     if is_scheduled
-        cost += (w_s + 2 + day_scheduled) ^ 2
+        cost += (w_s + WEEKEND + day_scheduled) ^ 2
         if exceeded_deadline
-            cost += (w_s + 2 + day_scheduled - DEADLINES[p_s]) ^ 2
+            cost += (w_s + WEEKEND + day_scheduled - DEADLINES[p_s]) ^ 2
         end
     else
-        cost += PENALTIES[p_s] * (w_s + 7) ^ 2
+        cost += PENALTIES[p_s] * (w_s + DAYS + WEEKEND) ^ 2
         if exceeded_deadline
-            cost += PENALTIES[p_s] * (w_s + 9 - DEADLINES[p_s]) ^ 2
+            cost += PENALTIES[p_s] * (w_s + DAYS + 2*WEEKEND - DEADLINES[p_s]) ^ 2
         end
     end
 
@@ -72,14 +73,41 @@ function clone_sol(solution)
     (copy(solution[1]), copy(solution[2]), copy(solution[3]), copy(solution[4]), copy(solution[5]), deepcopy(solution[6]))
 end
 
-function get_scheduled_surgeries(solution)
+function get_scheduled_surgeries(solution, surgeries)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     filter(s -> sc_d[s[1]] != nothing, surgeries)
 end
 
-function get_unscheduled_surgeries(solution)
+function get_unscheduled_surgeries(solution, surgeries)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     filter(s -> sc_d[s[1]] == nothing, surgeries)
+end
+
+function get_badly_scheduled_surgeries(surgeries, solution)
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+    bad = []
+
+    for s in surgeries
+        idx_s, p_s, w_s, e_s, g_s, t_s = s
+        if sc_d[idx_s] != nothing
+            if sc_d[idx_s] + w_s + 2 > DEADLINES[p_s] + 1
+                # NOTE: Coloco +1 na janela devido à forma como 
+                #   está implementado o wait-time. Se não fizer 
+                #   isso todas as urgências ficam fora do prazo, 
+                #   mesmo feitas nas segundas
+                # @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                push!(bad, idx_s)
+            end
+        else
+            if w_s + 7 + 2 > DEADLINES[p_s] + 1
+                # NOTE: Coloco +2 dias para contar com o proximo fds
+                # @printf("Cirurgia %s fora de prazo!\n", idx_s)
+                push!(bad, idx_s)
+            end
+        end
+    end
+
+    return bad
 end
 
 function get_surgery(instance, id)
@@ -96,7 +124,7 @@ function can_surgeon_fit_surgery_in_week(instance, solution, surgery)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
-    sum(sg_tt[:, g_s]) + t_s <= 100
+    sum(sg_tt[:, g_s]) + t_s <= 100 # TODO: tempo de limpeza????
 end
 
 function can_surgeon_fit_surgery_in_day(instance, solution, surgery, day)
@@ -261,6 +289,16 @@ function badly_scheduled(surgeries, solution)
     return bad
 end
 
+function intervalClash(interval1, interval2)
+    if interval1[1] > interval2[2]
+        return false
+    elseif interval2[1] > interval2[2]
+        return false
+    end
+    return true
+end
+
+# TODO: Fix shuffle function
 TIMESLOTS = 1
 IDX = 2
 SURGEON = 3
@@ -334,15 +372,6 @@ function perDay_to_initialFormat(s_daily, n_surgeries)
     end
 
     return sc_d, sc_r, sc_h, e, sg_tt, sc_ts
-end
-
-function intervalClash(interval1, interval2)
-    if interval1[1] > interval2[2]
-        return false
-    elseif interval2[1] > interval2[2]
-        return false
-    end
-    return true
 end
 
 function shuffle_day(dict_cirurgias)
