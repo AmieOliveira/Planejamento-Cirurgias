@@ -45,7 +45,10 @@ Inclusive maximizar o espaço livre
 	- Qual quantidade de cirurgias retirar nas remoções? (Avaliar)
     - Pior remoção ✓
     - Remoção Shaw: por dias, por cirurgiões ou por especialidade
+        * Discutir função por cirurgiões
+        * Funções não estão independentes da estrutura de dados (problema?)
     - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade tendenciosa para cirurgias com piores índices?
+    - Inserção Gulosa adicionando todas as cirurgias possíveis
     - Inserção por arrependimento
     - Quais outras inserções e remoções? (Olhar material sugerido)
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 

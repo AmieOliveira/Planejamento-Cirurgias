@@ -11,6 +11,20 @@ DAYS = 5
 WEEKEND = 2
 DAY_NAMES = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
 
+# Surgery input data content order
+IDX_S = 1           # idx_s
+PRIORITY_S = 2      # p_s
+WAIT_S = 3          # w_s
+ESPECIALTY_S = 4    # e_s
+SURGEON_S = 5       # g_s
+LENGTH_S = 6        # t_s
+
+# Interval slots content order
+SLOT_INIT = 1
+SLOT_END = 2
+SLOT_S = 3
+SLOT_DOC = 4
+
 function eval_surgery(surgery, rooms, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
@@ -124,7 +138,7 @@ function can_surgeon_fit_surgery_in_week(instance, solution, surgery)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
-    sum(sg_tt[:, g_s]) + t_s <= 100 # TODO: tempo de limpeza????
+    sum(sg_tt[:, g_s]) + t_s <= 100
 end
 
 function can_surgeon_fit_surgery_in_day(instance, solution, surgery, day)

@@ -19,7 +19,7 @@ end
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
-data_root = "toy1"    # "fullrand_1000cirurgias"
+data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"    # "fullrand_1000cirurgias"
 
 out_dir = "Soluções/"
 

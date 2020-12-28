@@ -22,8 +22,6 @@ function random_removal(instance, solution)
     solution
 end
 
-# TODO
-IDX_S = 1
 function worst_removal(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
@@ -45,9 +43,130 @@ function worst_removal(instance, solution)
     end
 
     ret = unschedule_surgery(instance, solution, scheduled_surgeries[wIdx])
-    # addedValue = eval_surgery(scheduled_surgeries[wIdx], rooms, sc_d[scheduled_surgeries[wIdx][IDX_S]], false)
+    # addedValue = eval_surgery(scheduled_surgeries[wIdx], rooms, 
+    #                           sc_d[scheduled_surgeries[wIdx][IDX_S]], false)
 
     return ret
+end
+
+function shaw_removal_day(instance, solution; verbose=false)
+    # Por enquanto estou fazendo totalmente aleatorio, mas poderia utilizar o valor da 
+    # FO na escolha
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    # Sortiar um dia e uma sala
+    dia = rand(1:DAYS)
+    sala = rand(1:rooms)
+    if verbose
+        println("Removendo cirurgias do dia ", dia, " na sala ", sala)
+        #println("Slots em sc_ts: ", sc_ts[dia, sala])
+    end
+
+    slots = copy(sc_ts[dia, sala])
+    
+    # NOTE: Talvez eu queira deixar de uma maneira que nao dependesse da 
+    #   estrutura de dados?
+    for slot in slots
+        #println(slot)
+        s = filter(x -> x[IDX_S] == slot[SLOT_S], surgeries)[1]
+        unschedule_surgery(instance, solution, s)
+    end
+
+    return solution
+end
+
+function shaw_removal_doc(instance, solution; verbose=false)
+    # Por enquanto estou fazendo totalmente aleatorio, mas poderia utilizar o valor da 
+    # FO na escolha
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+
+    i = rand(1:length(scheduled_surgeries))
+
+    # NOTE: Talvez eu queira deixar de uma maneira que nao dependesse da 
+    #   estrutura de dados?
+    doc = scheduled_surgeries[i][SURGEON_S]
+
+    to_delete = filter(x -> x[SURGEON_S] == doc, scheduled_surgeries)
+    if verbose
+        println("Removing surgeries from doctor ", doc)
+        #println("\tSet of surgeries: ")
+    end
+
+    for s in to_delete
+        unschedule_surgery(instance, solution, s)
+    end
+
+    # FIXME: Será que seria melhor fazer pelo proprio numero de cirurgioes? 
+    #   (Funcao get_number_of_surgeons)
+    #   Da forma implementada introduzo uma tendencia (cirurgioes com mais 
+    #   cirurgias sao mais selecionados), mas talvez seja uma tendencia boa
+
+    return solution
+end
+
+function shaw_removal_esp(instance, solution; verbose=false)
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    # Sortiar um dia e uma sala
+    dia = rand(1:DAYS)
+    sala = rand(1:rooms)
+    if verbose
+        println("Removendo cirurgias do dia ", dia, " na sala ", sala)
+        #println("Slots em sc_ts: ", sc_ts[dia, sala])
+    end
+
+    slots = copy(sc_ts[dia, sala])
+
+    # NOTE: Talvez eu queira deixar de uma maneira que nao dependesse da 
+    #   estrutura de dados?
+    for slot in slots
+        #println(slot)
+        s = filter(x -> x[IDX_S] == slot[SLOT_S], surgeries)[1]
+        unschedule_surgery(instance, solution, s)
+    end
+
+    esp = e[dia, sala]
+
+    # Get another day/room with same specialty
+    same = []
+    L = 0
+    for d in 1:DAYS
+        for r in 1:rooms
+            if e[d,r] == esp && (d ≠ dia || r ≠ sala)
+                push!(same, [d, r])
+                L += 1
+            end
+        end
+    end
+
+    if L ≠ 0
+        rIdx = rand(1:L)
+
+        ndia, nsala = same[rIdx]
+        if verbose
+            println("Removendo cirurgias do dia ", ndia, " na sala ", nsala)
+        end
+    
+
+        slots = copy(sc_ts[ndia, nsala])
+
+        for slot in slots
+            #println(slot)
+            s = filter(x -> x[IDX_S] == slot[SLOT_S], surgeries)[1]
+            unschedule_surgery(instance, solution, s)
+        end
+    else
+        if verbose
+            println("Apenas um dia com especialidada. Comportamento como shaw_day")
+        end
+    end
+
+    return solution
 end
 
 # TODO: Shaw removal
@@ -58,7 +177,7 @@ function greedy_insertion(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    unscheduled_surgeries = get_unscheduled_surgeries(solution)
+    unscheduled_surgeries = get_unscheduled_surgeries(solution, surgeries)
     sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
     for surgery in unscheduled_surgeries
@@ -85,7 +204,7 @@ function greedy_insertion(instance, solution; verbose=false)
                         if t_s + 2 <= (timeslot_end - timeslot_start + 1)
                             if timeslot_start + t_s - 1 <= 46
                                 solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
-                                #return solution
+                                return solution
                             end
                         end
                     end
@@ -110,10 +229,18 @@ function removal(instance, solution, weights)
         return (1, random_removal(instance, solution))
     elseif selected_idx == 2
         return (2, worst_removal(instance, solution))
+    elseif selected_idx == 3
+        return (3, shaw_removal_day(instance, solution))
+    elseif selected_idx == 4
+        return (4, shaw_removal_doc(instance, solution))
+    elseif selected_idx == 5
+        return (5, shaw_removal_esp(instance, solution))
     else
         println("This should not be happening.")
         error
     end
+
+    print("Removal ", selected_idx, " used")
 end
 
 function insertion(instance, solution, weights)
@@ -137,7 +264,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
     iter = 0
     T = T0
 
-    rem_ops, ins_ops = 2, 1
+    rem_ops, ins_ops = 5, 1
     rem_weights, ins_weights = ones(rem_ops), ones(ins_ops)
 
     while T > Tf    # TODO: Aquelas coisas de criterio de parada?
