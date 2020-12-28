@@ -41,8 +41,13 @@ tempo de limpeza), a cirurgia e o cirurgião.
 - Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção
-	- Fazer operadores de remoção que remove mais de 1? Testar no fim
     - Fazer operadores de inserção/remoção retornarem o valor da F.O.? (Avaliar)
+	- Qual quantidade de cirurgias retirar nas remoções? (Avaliar)
+    - Pior remoção ✓
+    - Remoção Shaw: por dias, por cirurgiões ou por especialidade
+    - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade tendenciosa para cirurgias com piores índices?
+    - Inserção por arrependimento
+    - Quais outras inserções e remoções? (Olhar material sugerido)
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
 ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
 - Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
