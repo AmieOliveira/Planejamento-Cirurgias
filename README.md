@@ -37,20 +37,27 @@ tempo de limpeza), a cirurgia e o cirurgião.
 ## TODOs:
 - Verificar o algoritmo guloso: 
 	1. tem que marcar as urgencias na segunda.
-- Acertar a greedy_insertion (testar colocando so um ou tantos quanto o possivel?)
 - Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção
     - Fazer operadores de inserção/remoção retornarem o valor da F.O.? (Avaliar)
 	- Qual quantidade de cirurgias retirar nas remoções? (Avaliar)
     - Pior remoção ✓
-    - Remoção Shaw: por dias, por cirurgiões ou por especialidade
+    - Remoção Shaw: por dias, por cirurgiões ou por especialidade (✓)
         * Discutir função por cirurgiões
         * Funções não estão independentes da estrutura de dados (problema?)
-    - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade tendenciosa para cirurgias com piores índices?
-    - Inserção Gulosa adicionando todas as cirurgias possíveis
+    - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade 
+    tendenciosa para cirurgias com piores índices?
+    - Inserção Gulosa adicionando todas as cirurgias possíveis ✓
     - Inserção por arrependimento
     - Quais outras inserções e remoções? (Olhar material sugerido)
+    - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo
+- Tunar parâmetros do ALNS!
+    - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
+        ⟹ Está sorteando, mas quase não encontra soluções melhores do que a atual! Problema 
+        nas opções de operadores, nos operadores em si, nos parâmetros ou em outra coisa?
+    - Análise de como está a exploração do espaço de busca (será que está explorando de fato 
+    alternativas ou ficando sempre na redondeza da solução inicial?)
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
 ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
 - Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
@@ -81,3 +88,4 @@ ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do 
 - ~~Alterar NAIVE para comportar novas estruturas de dados com redundancia (tentar remover sc_d, sc_h, sc_r. acho que será possivel)~~ 
 - ~~Botar penalidades CAPS LOCK~~
 - ~~Verificar se esta contanto o tempo semanal dos cirurgioes (NAIVE & ALNS)~~
+- ~~Acertar a greedy_insertion (testar colocando so um ou tantos quanto o possivel?)~~

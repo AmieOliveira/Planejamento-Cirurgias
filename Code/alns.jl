@@ -281,6 +281,9 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
     s = clone_sol(initial_solution)
     s_best = clone_sol(initial_solution)
 
+    fo_s = target_fn(instance, s)
+    fo_best = fo_s
+
     iter = 0
     T = T0
 
@@ -292,7 +295,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         rem_freq, ins_freq = ones(rem_ops), ones(ins_ops)
 
         print("T > Tf: $(round(T, digits=3)) > $(Tf)")
-        print("\t best: $(target_fn(instance, s_best)), curr: $(target_fn(instance, s))")
+        print("\t best: $(fo_best), curr: $(fo_s)")
         println("")
 
         while iter < SA_max
@@ -304,12 +307,16 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
             rem_freq[rem_idx] += 1
             ins_freq[ins_idx] += 1
 
-            ∆ = target_fn(instance, s2) - target_fn(instance, s)
+            fo_curr = target_fn(instance, s2)
+
+            ∆ = fo_curr - fo_s
 
             if ∆ < 0                
                 s = clone_sol(s2)
-                if target_fn(instance, s2) < target_fn(instance, s_best)
+                fo_s = fo_curr
+                if fo_curr < fo_best
                     s_best = clone_sol(s2)
+                    fo_best = fo_curr
                     rem_scores[rem_idx] += σ1
                     ins_scores[ins_idx] += σ1
                 else
@@ -318,6 +325,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
                 end
             elseif rand(Float64) < ℯ^(-∆/T)
                 s = clone_sol(s2)
+                fo_s = fo_curr
                 rem_scores[rem_idx] += σ3
                 ins_scores[ins_idx] += σ3
             end
