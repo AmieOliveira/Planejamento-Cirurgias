@@ -169,7 +169,6 @@ function shaw_removal_esp(instance, solution; verbose=false)
     return solution
 end
 
-# TODO: Shaw removal
 # o Que mais?
 
 # TODO: insert as many as possible?
@@ -180,6 +179,10 @@ function greedy_insertion(instance, solution; verbose=false)
     unscheduled_surgeries = get_unscheduled_surgeries(solution, surgeries)
     sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
 
+    if verbose
+        println("Unscheduled surgeries: ", unscheduled_surgeries)
+    end
+
     for surgery in unscheduled_surgeries
         idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
@@ -187,15 +190,26 @@ function greedy_insertion(instance, solution; verbose=false)
             continue
         end
 
+        scheduled = false
+
         for d in 1:DAYS
+            if scheduled
+                break
+            end
             if !can_surgeon_fit_surgery_in_day(instance, solution, surgery, d)
                 continue
             end
 
             for r in 1:rooms
+                if scheduled
+                    break
+                end
                 free_timeslots = get_free_timeslots(instance, solution, r, d)
 
                 for (timeslot_start, timeslot_end) in free_timeslots
+                    if scheduled
+                        break
+                    end
                     if !can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, d, timeslot_start, timeslot_end)
                         continue
                     end
@@ -204,7 +218,13 @@ function greedy_insertion(instance, solution; verbose=false)
                         if t_s + 2 <= (timeslot_end - timeslot_start + 1)
                             if timeslot_start + t_s - 1 <= 46
                                 solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
-                                return solution
+                                scheduled = true
+
+                                if verbose
+                                    println("Scheduled surgery ", surgery[IDX_S])
+                                end
+                                break
+                                #return solution
                             end
                         end
                     end
