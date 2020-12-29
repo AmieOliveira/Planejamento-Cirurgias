@@ -19,13 +19,13 @@ end
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
-data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"    # "fullrand_1000cirurgias"
+data_root = "toy4"    # "fullrand_1000cirurgias"
 
 out_dir = "Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 2
+rooms = 1
 
 # Solution set up
 instance = (surgeries, rooms)
@@ -48,7 +48,9 @@ println("Target function: ", fn)
 #println("")
 #println("Target function: ", fn)
 
-solution = @time alns_solve(instance, solution, SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=15)
+solution = @time alns_solve(instance, solution, 
+                            SA_max=10, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=1,
+                            verbose=true)
 print_solution(instance, solution)
 solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 

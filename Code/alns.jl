@@ -277,7 +277,7 @@ function insertion(instance, solution, weights)
     end
 end
 
-function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3)
+function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
     s = clone_sol(initial_solution)
     s_best = clone_sol(initial_solution)
 
@@ -331,6 +331,16 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         end
         for i in 1:length(ins_weights)
             ins_weights[i] = (1 - r) * ins_weights[i] + r * (ins_scores[i] / ins_freq[i])
+        end
+
+        if verbose
+            println("Uso dos operadores de remoção: ")
+            println("\tVezes: ", rem_freq)
+            println("\tPontuação: ", rem_scores)
+            println("Uso dos operadores de inserção: ")
+            println("\tVezes: ", ins_freq)
+            println("\tPontuação: ", ins_scores)
+            println("")
         end
     end
 
