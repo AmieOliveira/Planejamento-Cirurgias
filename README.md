@@ -35,8 +35,7 @@ tempo de limpeza), a cirurgia e o cirurgião.
 
 
 ## TODOs:
-- Verificar o algoritmo guloso: 
-	1. tem que marcar as urgencias na segunda.
+- Verificar o operador de insercao gulosa: Ordem de prioridades está esquisita.
 - Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção

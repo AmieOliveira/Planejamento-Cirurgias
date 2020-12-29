@@ -31,15 +31,21 @@ function worst_removal(instance, solution)
     # qt_to_remove ?
 
     wIdx = 1
-    wValue = eval_surgery(scheduled_surgeries[1], rooms, sc_d[scheduled_surgeries[1][IDX_S]], false)
-    
-    for i in 2:length(scheduled_surgeries)
-        v = eval_surgery(scheduled_surgeries[i], rooms, sc_d[scheduled_surgeries[i][IDX_S]], false)
 
-        if v > wValue
-            wIdx = i
-            wValue = v
+    try
+        wValue = eval_surgery(scheduled_surgeries[1], rooms, sc_d[scheduled_surgeries[1][IDX_S]], false)
+    
+        for i in 2:length(scheduled_surgeries)
+            v = eval_surgery(scheduled_surgeries[i], rooms, sc_d[scheduled_surgeries[i][IDX_S]], false)
+
+            if v > wValue
+                wIdx = i
+                wValue = v
+            end
         end
+
+    catch 
+        return solution
     end
 
     ret = unschedule_surgery(instance, solution, scheduled_surgeries[wIdx])
