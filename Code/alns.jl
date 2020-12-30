@@ -29,26 +29,19 @@ function worst_removal!(instance, solution)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
     # qt_to_remove ?
+    worst_surgery = first(scheduled_surgeries)
+    worst_val = 0
+        
+    for surgery in scheduled_surgeries
+        val = eval_surgery(surgery, rooms, sc_d[surgery[IDX_S]], false)
 
-    wIdx = 1
-
-    try
-        wValue = eval_surgery(scheduled_surgeries[1], rooms, sc_d[scheduled_surgeries[1][IDX_S]], false)
-    
-        for i in 2:length(scheduled_surgeries)
-            v = eval_surgery(scheduled_surgeries[i], rooms, sc_d[scheduled_surgeries[i][IDX_S]], false)
-
-            if v > wValue
-                wIdx = i
-                wValue = v
-            end
+        if val > worst_val
+            worst_surgery = surgery
+            worst_val = val
         end
-
-    catch 
-        return solution
     end
 
-    ret = unschedule_surgery(instance, solution, scheduled_surgeries[wIdx])
+    ret = unschedule_surgery(instance, solution, worst_surgery)
     # addedValue = eval_surgery(scheduled_surgeries[wIdx], rooms, 
     #                           sc_d[scheduled_surgeries[wIdx][IDX_S]], false)
 
@@ -327,29 +320,28 @@ end
 # TODO: insercao por arrependimento
 # o que mais?
 
+REMOVAL_OPERATORS = [
+    ("random   ", random_removal!),
+    ("worst    ", worst_removal!),
+    ("shaw_day", shaw_removal_day!),
+    ("shaw_surgeon", shaw_removal_doc!),
+    ("shaw_specialty", shaw_removal_esp!)
+]
+
 function removal(instance, solution, weights)
     solution = solution
     
     probs = map(x -> x / sum(weights), weights)
     selected_idx = roulette(probs)
 
-    if selected_idx == 1
-        return (1, random_removal!(instance, solution))
-    elseif selected_idx == 2
-        return (2, worst_removal!(instance, solution))
-    elseif selected_idx == 3
-        return (3, shaw_removal_day!(instance, solution))
-    elseif selected_idx == 4
-        return (4, shaw_removal_doc!(instance, solution))
-    elseif selected_idx == 5
-        return (5, shaw_removal_esp!(instance, solution))
-    else
-        println("This should not be happening.")
-        error
-    end
-
-    print("Removal ", selected_idx, " used")
+    _, fn = REMOVAL_OPERATORS[selected_idx]
+    return (selected_idx, fn(instance, solution))
 end
+
+INSERTION_OPERATORS = [
+    ("greedy", greedy_insertion!),
+    ("random", random_insertion!)
+]
 
 function insertion(instance, solution, weights)
     solution = solution
@@ -357,14 +349,8 @@ function insertion(instance, solution, weights)
     probs = map(x -> x / sum(weights), weights)
     selected_idx = roulette(probs)
 
-    if selected_idx == 1
-        return (1, greedy_insertion!(instance, solution))
-    elseif selected_idx == 2
-        return (2, random_insertion!(instance, solution))
-    else
-        println("This should not be happening.")
-        error
-    end
+    _, fn = INSERTION_OPERATORS[selected_idx]
+    return (selected_idx, fn(instance, solution))
 end
 
 function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
@@ -432,13 +418,17 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         end
 
         if verbose
-            println("Uso dos operadores de remoção: ")
-            println("\tVezes: ", rem_freq)
-            println("\tPontuação: ", rem_scores)
-            println("Uso dos operadores de inserção: ")
-            println("\tVezes: ", ins_freq)
-            println("\tPontuação: ", ins_scores)
-            println("")
+            println("REMOVALS\t\tfreq\tscores")
+            for (idx, r_op) in enumerate(REMOVAL_OPERATORS)
+                name, fn = r_op
+                println("\t$name\t$(rem_freq[idx])\t$(rem_scores[idx])") 
+            end
+
+            println("INSERTIONS\t\tfreq\tscores")
+            for (idx, i_op) in enumerate(INSERTION_OPERATORS)
+                name, fn = i_op
+                println("\t$name\t$(ins_freq[idx])\t$(ins_scores[idx])") 
+            end
         end
     end
 
