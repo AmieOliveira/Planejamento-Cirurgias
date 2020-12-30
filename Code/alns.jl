@@ -223,7 +223,7 @@ function greedy_insertion!(instance, solution; verbose=false)
                                 scheduled = true
 
                                 if verbose
-                                    println("DEGUBG:\tGreedy Insertion: Scheduled surgery ", 
+                                    println("DEGUBG:\t\tGreedy Insertion: Scheduled surgery ", 
                                             surgery[IDX_S])
                                 end
                                 break
@@ -233,7 +233,7 @@ function greedy_insertion!(instance, solution; verbose=false)
                             scheduled = true
 
                             if verbose
-                                println("DEGUBG:\tGreedy Insertion: Scheduled surgery ", 
+                                println("DEGUBG:\t\tGreedy Insertion: Scheduled surgery ", 
                                         surgery[IDX_S])
                             end
                             break
@@ -300,7 +300,7 @@ function random_insertion!(instance, solution; verbose=false)
                                 scheduled = true
 
                                 if verbose
-                                    println("DEGUBG:\tRandom Insertion: Scheduled surgery ", 
+                                    println("DEGUBG:\t\tRandom Insertion: Scheduled surgery ", 
                                             surgery[IDX_S])
                                 end
                                 break
@@ -310,7 +310,7 @@ function random_insertion!(instance, solution; verbose=false)
                             scheduled = true
 
                             if verbose
-                                println("DEGUBG:\tRandom Insertion: Scheduled surgery ", 
+                                println("DEGUBG:\t\tRandom Insertion: Scheduled surgery ", 
                                         surgery[IDX_S])
                             end
                             break
