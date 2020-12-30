@@ -47,7 +47,7 @@ function solve(instance; verbose=true)
             end
 
             for r in 1:rooms
-                if !can_surgeon_fit_surgery_in_timeslot(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d, h[d, r], h[d, r])
+                if !can_surgeon_fit_surgery_in_timeslot(instance, (sc_d, sc_r, sc_h, e, sg_tt, sc_ts), s, d, h[d, r], h[d, r] + t_s + 2)
                     # cirurgiao ocupado naquele momento. tentar na proxima sala
                     if verbose
                         println("\tfalha na cirurgia ", idx_s, ": cirurgiao ", g_s, " ocupado naquele momento. tentar na proxima sala")
