@@ -22,13 +22,12 @@ function random_removal!(instance, solution)
     solution
 end
 
-function worst_removal!(instance, solution)
+function worst_removal_single!(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
     
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    # qt_to_remove ?
     worst_surgery = first(scheduled_surgeries)
     worst_val = 0
         
@@ -41,11 +40,24 @@ function worst_removal!(instance, solution)
         end
     end
 
-    ret = unschedule_surgery(instance, solution, worst_surgery)
-    # addedValue = eval_surgery(scheduled_surgeries[wIdx], rooms, 
-    #                           sc_d[scheduled_surgeries[wIdx][IDX_S]], false)
+    solution = unschedule_surgery(instance, solution, worst_surgery)
 
-    return ret
+    return solution
+end
+
+function worst_removal_multiple!(instance, solution)
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+    max_qt = length(scheduled_surgeries) / 5
+    qt_to_remove = rand(0:max_qt)
+
+    for _ in 1:qt_to_remove
+        solution = worst_removal_single!(instance, solution)
+    end
+
+    return solution
 end
 
 function shaw_removal_day!(instance, solution; verbose=false)
@@ -170,8 +182,7 @@ end
 
 # o Que mais?
 
-# TODO: insert as many as possible?
-function greedy_insertion!(instance, solution; verbose=false)
+function greedy_insertion_single!(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
@@ -213,20 +224,22 @@ function greedy_insertion!(instance, solution; verbose=false)
                         if timeslot_end == LENGTH_DAY
                             if timeslot_start + t_s - 1 <= LENGTH_DAY
                                 solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                                return solution
                                 scheduled = true
 
                                 if verbose
-                                    println("DEGUBG:\t\tGreedy Insertion: Scheduled surgery ", 
+                                    println("DEGUB:\t\tGreedy Insertion: Scheduled surgery ", 
                                             surgery[IDX_S])
                                 end
                                 break
                             end
                         elseif t_s + LENGTH_INTERVAL <= (timeslot_end - timeslot_start + 1)
                             solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                            return solution
                             scheduled = true
 
                             if verbose
-                                println("DEGUBG:\t\tGreedy Insertion: Scheduled surgery ", 
+                                println("DEGUB:\t\tGreedy Insertion: Scheduled surgery ", 
                                         surgery[IDX_S])
                             end
                             break
@@ -235,6 +248,21 @@ function greedy_insertion!(instance, solution; verbose=false)
                 end
             end
         end
+    end
+
+    return solution
+end
+
+function greedy_insertion_multiple!(instance, solution; verbose=false)
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    unscheduled_surgeries = get_unscheduled_surgeries(solution, surgeries)
+    max_qt = length(unscheduled_surgeries) / 5
+    qt_to_insert = rand(0:max_qt)
+
+    for _ in 1:qt_to_insert
+        solution = greedy_insertion_single!(instance, solution)
     end
 
     return solution
@@ -320,14 +348,6 @@ end
 # TODO: insercao por arrependimento
 # o que mais?
 
-REMOVAL_OPERATORS = [
-    ("random   ", random_removal!),
-    ("worst    ", worst_removal!),
-    ("shaw_day", shaw_removal_day!),
-    ("shaw_surgeon", shaw_removal_doc!),
-    ("shaw_specialty", shaw_removal_esp!)
-]
-
 function removal(instance, solution, weights)
     solution = solution
     
@@ -337,11 +357,6 @@ function removal(instance, solution, weights)
     _, fn = REMOVAL_OPERATORS[selected_idx]
     return (selected_idx, fn(instance, solution))
 end
-
-INSERTION_OPERATORS = [
-    ("greedy", greedy_insertion!),
-    ("random", random_insertion!)
-]
 
 function insertion(instance, solution, weights)
     solution = solution
@@ -353,6 +368,21 @@ function insertion(instance, solution, weights)
     return (selected_idx, fn(instance, solution))
 end
 
+REMOVAL_OPERATORS = [
+    ("random   ", random_removal!),
+    ("worst single", worst_removal_single!),
+    ("worst multiple", worst_removal_multiple!),
+    ("shaw_day", shaw_removal_day!),
+    ("shaw_surgeon", shaw_removal_doc!),
+    ("shaw_specialty", shaw_removal_esp!)
+]
+
+INSERTION_OPERATORS = [
+    ("random    ", random_insertion!),
+    ("greedy single", greedy_insertion_single!),
+    ("greedy multiple", greedy_insertion_multiple!)
+]
+
 function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
     s = clone_sol(initial_solution)
     s_best = clone_sol(initial_solution)
@@ -363,7 +393,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
     iter = 0
     T = T0
 
-    rem_ops, ins_ops = 5, 2
+    rem_ops, ins_ops = length(REMOVAL_OPERATORS), length(INSERTION_OPERATORS)
     rem_weights, ins_weights = ones(rem_ops), ones(ins_ops)
 
     while T > Tf    # TODO: Aquelas coisas de criterio de parada?
