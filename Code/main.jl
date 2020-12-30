@@ -10,7 +10,7 @@ include("alns.jl")
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
-data_root = "toy1"    # "fullrand_1000cirurgias"
+data_root = "toy4"    # "fullrand_1000cirurgias"
 
 out_dir = "Soluções/"
 

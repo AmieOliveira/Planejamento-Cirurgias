@@ -1,7 +1,7 @@
 using Random
 include("helper.jl")
 
-function random_removal(instance, solution)
+function random_removal!(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
 
@@ -22,7 +22,7 @@ function random_removal(instance, solution)
     solution
 end
 
-function worst_removal(instance, solution)
+function worst_removal!(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
     
@@ -55,7 +55,7 @@ function worst_removal(instance, solution)
     return ret
 end
 
-function shaw_removal_day(instance, solution; verbose=false)
+function shaw_removal_day!(instance, solution; verbose=false)
     # Por enquanto estou fazendo totalmente aleatorio, mas poderia utilizar o valor da 
     # FO na escolha
     surgeries, rooms = instance
@@ -82,7 +82,7 @@ function shaw_removal_day(instance, solution; verbose=false)
     return solution
 end
 
-function shaw_removal_doc(instance, solution; verbose=false)
+function shaw_removal_doc!(instance, solution; verbose=false)
     # Por enquanto estou fazendo totalmente aleatorio, mas poderia utilizar o valor da 
     # FO na escolha
     surgeries, rooms = instance
@@ -114,7 +114,7 @@ function shaw_removal_doc(instance, solution; verbose=false)
     return solution
 end
 
-function shaw_removal_esp(instance, solution; verbose=false)
+function shaw_removal_esp!(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
@@ -178,16 +178,12 @@ end
 # o Que mais?
 
 # TODO: insert as many as possible?
-function greedy_insertion(instance, solution; verbose=false)
+function greedy_insertion!(instance, solution; verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
     unscheduled_surgeries = get_unscheduled_surgeries(solution, surgeries)
     sort!(unscheduled_surgeries, lt = (x, y) -> is_more_prioritary(x, y))
-
-    if verbose
-        println("Unscheduled surgeries: ", unscheduled_surgeries)
-    end
 
     for surgery in unscheduled_surgeries
         idx_s, p_s, w_s, e_s, g_s, t_s = surgery
@@ -227,7 +223,8 @@ function greedy_insertion(instance, solution; verbose=false)
                                 scheduled = true
 
                                 if verbose
-                                    println("Scheduled surgery ", surgery[IDX_S])
+                                    println("DEGUBG:\tGreedy Insertion: Scheduled surgery ", 
+                                            surgery[IDX_S])
                                 end
                                 break
                             end
@@ -236,7 +233,85 @@ function greedy_insertion(instance, solution; verbose=false)
                             scheduled = true
 
                             if verbose
-                                println("Scheduled surgery ", surgery[IDX_S])
+                                println("DEGUBG:\tGreedy Insertion: Scheduled surgery ", 
+                                        surgery[IDX_S])
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return solution
+end
+
+function random_insertion!(instance, solution; verbose=false)
+    surgeries, rooms = instance
+    unsc_surgeries = get_unscheduled_surgeries(solution, surgeries)
+    L = length(unsc_surgeries)
+    
+    if L == 0
+        if verbose
+            println("WARNING:\tRandom Insertion: No surgeries to add")
+        end
+        return solution
+    end
+
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+    shuffle!(unsc_surgeries)    # order array randomly
+
+    for surgery in unsc_surgeries
+        idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+        if !can_surgeon_fit_surgery_in_week(instance, solution, surgery)
+            continue
+        end
+
+        scheduled = false
+
+        for d in 1:DAYS
+            if scheduled
+                break
+            end
+            if !can_surgeon_fit_surgery_in_day(instance, solution, surgery, d)
+                continue
+            end
+
+            for r in 1:rooms
+                if scheduled
+                    break
+                end
+                free_timeslots = get_free_timeslots(instance, solution, r, d)
+
+                for (timeslot_start, timeslot_end) in free_timeslots
+                    if scheduled
+                        break
+                    end
+                    if !can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, d, timeslot_start, timeslot_end)
+                        continue
+                    end
+
+                    if e[d, r] == e_s || e[d, r] == 0
+                        if timeslot_end == LENGTH_DAY
+                            if timeslot_start + t_s - 1 <= LENGTH_DAY
+                                solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                                scheduled = true
+
+                                if verbose
+                                    println("DEGUBG:\tRandom Insertion: Scheduled surgery ", 
+                                            surgery[IDX_S])
+                                end
+                                break
+                            end
+                        elseif t_s + LENGTH_INTERVAL <= (timeslot_end - timeslot_start + 1)
+                            solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                            scheduled = true
+
+                            if verbose
+                                println("DEGUBG:\tRandom Insertion: Scheduled surgery ", 
+                                        surgery[IDX_S])
                             end
                             break
                         end
@@ -259,15 +334,15 @@ function removal(instance, solution, weights)
     selected_idx = roulette(probs)
 
     if selected_idx == 1
-        return (1, random_removal(instance, solution))
+        return (1, random_removal!(instance, solution))
     elseif selected_idx == 2
-        return (2, worst_removal(instance, solution))
+        return (2, worst_removal!(instance, solution))
     elseif selected_idx == 3
-        return (3, shaw_removal_day(instance, solution))
+        return (3, shaw_removal_day!(instance, solution))
     elseif selected_idx == 4
-        return (4, shaw_removal_doc(instance, solution))
+        return (4, shaw_removal_doc!(instance, solution))
     elseif selected_idx == 5
-        return (5, shaw_removal_esp(instance, solution))
+        return (5, shaw_removal_esp!(instance, solution))
     else
         println("This should not be happening.")
         error
@@ -283,7 +358,9 @@ function insertion(instance, solution, weights)
     selected_idx = roulette(probs)
 
     if selected_idx == 1
-        return (1, greedy_insertion(instance, solution))
+        return (1, greedy_insertion!(instance, solution))
+    elseif selected_idx == 2
+        return (2, random_insertion!(instance, solution))
     else
         println("This should not be happening.")
         error
@@ -300,7 +377,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
     iter = 0
     T = T0
 
-    rem_ops, ins_ops = 5, 1
+    rem_ops, ins_ops = 5, 2
     rem_weights, ins_weights = ones(rem_ops), ones(ins_ops)
 
     while T > Tf    # TODO: Aquelas coisas de criterio de parada?
