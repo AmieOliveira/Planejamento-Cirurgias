@@ -183,7 +183,7 @@ function greedy_insertion(instance, solution; verbose=false)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
     unscheduled_surgeries = get_unscheduled_surgeries(solution, surgeries)
-    sort!(unscheduled_surgeries, lt = (x, y) -> !is_more_prioritary(x, y))
+    sort!(unscheduled_surgeries, lt = (x, y) -> is_more_prioritary(x, y))
 
     if verbose
         println("Unscheduled surgeries: ", unscheduled_surgeries)
@@ -221,8 +221,8 @@ function greedy_insertion(instance, solution; verbose=false)
                     end
 
                     if e[d, r] == e_s || e[d, r] == 0
-                        if t_s + 2 <= (timeslot_end - timeslot_start + 1)
-                            if timeslot_start + t_s - 1 <= 46
+                        if timeslot_end == LENGTH_DAY
+                            if timeslot_start + t_s - 1 <= LENGTH_DAY
                                 solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
                                 scheduled = true
 
@@ -230,8 +230,15 @@ function greedy_insertion(instance, solution; verbose=false)
                                     println("Scheduled surgery ", surgery[IDX_S])
                                 end
                                 break
-                                #return solution
                             end
+                        elseif t_s + LENGTH_INTERVAL <= (timeslot_end - timeslot_start + 1)
+                            solution = schedule_surgery(instance, solution, surgery, d, r, timeslot_start)
+                            scheduled = true
+
+                            if verbose
+                                println("Scheduled surgery ", surgery[IDX_S])
+                            end
+                            break
                         end
                     end
                 end

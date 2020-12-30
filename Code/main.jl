@@ -6,15 +6,6 @@ include("io.jl")
 include("naive_1.jl")
 include("alns.jl")
 
-function load_surgeries(filepath)
-    surgeries = []
-    for row in CSV.File(filepath)
-        surgery = (row[1], row[2], row[3], row[4], row[5], row[6])
-        push!(surgeries, surgery)
-    end
-    surgeries
-end
-
 # setup
 # -- paths
 data_dir = "Dados/"

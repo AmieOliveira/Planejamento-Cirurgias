@@ -49,8 +49,10 @@ Inclusive maximizar o espaço livre
     tendenciosa para cirurgias com piores índices?
     - Inserção Gulosa adicionando todas as cirurgias possíveis ✓
     - Inserção por arrependimento
+    - Inserção aleatória
     - Quais outras inserções e remoções? (Olhar material sugerido)
     - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo
+- Instâncias para teste
 - Tunar parâmetros do ALNS!
     - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
         ⟹ Está sorteando, mas quase não encontra soluções melhores do que a atual! Problema 

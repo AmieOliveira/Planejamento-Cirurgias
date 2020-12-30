@@ -25,6 +25,28 @@ SLOT_END = 2
 SLOT_S = 3
 SLOT_DOC = 4
 
+function load_surgeries(filepath)
+    surgeries = []
+    for row in CSV.File(filepath)
+        surgery = (row[1], row[2], row[3], row[4], row[5], row[6])
+        push!(surgeries, surgery)
+    end
+    surgeries
+end
+
+function emptySolution(instance)
+    urgeries, rooms = instance
+
+    sc_d = Vector{Union{Nothing, Int64}}(nothing, length(surgeries)) # schedule days
+    sc_h = Vector{Union{Nothing, Int64}}(nothing, length(surgeries)) # schedule hours
+    sc_r = Vector{Union{Nothing, Int64}}(nothing, length(surgeries)) # schedule rooms
+    e = zeros(Int, DAYS, rooms) # e[i, j] stores the specialty in room 'i' and day 'j'
+    sg_tt = zeros(Int, DAYS, get_number_of_surgeons(instance)) # sg_tt[i, j] stores the total time scheduled for the surgeon 'j' at day 'i'
+    sc_ts = [[] for i=1:DAYS, j=1:rooms] # scheduled timeslots
+
+    return (sc_d, sc_h, sc_r, e, sg_tt, sc_ts)
+end
+
 function eval_surgery(surgery, rooms, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
@@ -193,14 +215,14 @@ function schedule_surgery(instance, solution, surgery, day, room, timeslot)
     sc_d[idx_s] = day
     sc_r[idx_s] = room
     sc_h[idx_s] = timeslot
-    sg_tt[day, g_s] += t_s + 2
+    sg_tt[day, g_s] += t_s + LENGTH_INTERVAL
     e[day, room] = e_s
 
     if length(filter(ts -> ts[3] == idx_s, sc_ts[day, room])) > 0
         println("Same surgery counting more than once! This should not be happening!!")
     end
 
-    push!(sc_ts[day, room], [sc_h[idx_s], sc_h[idx_s] + t_s - 1 + 2, idx_s, g_s])
+    push!(sc_ts[day, room], [sc_h[idx_s], sc_h[idx_s] + t_s - 1 + LENGTH_INTERVAL, idx_s, g_s])
     sort!(sc_ts[day, room], by = ts -> ts[1][1])
 
     (sc_d, sc_r, sc_h, e, sg_tt, sc_ts)
@@ -214,7 +236,7 @@ function get_free_timeslots(instance, solution, room, day)
     free_timeslots = []
 
     if length(timeslots) == 0
-        return [(1, 46)]
+        return [(1, LENGTH_DAY)]
     end
 
     for i in 1:(length(timeslots) - 1)
@@ -231,8 +253,8 @@ function get_free_timeslots(instance, solution, room, day)
     end
 
     last_i, last_f, _, _ = last(timeslots)
-    if last_f < 46
-        push!(free_timeslots, (last_f + 1, 46))
+    if last_f < LENGTH_DAY
+        push!(free_timeslots, (last_f + 1, LENGTH_DAY))
     end
 
     free_timeslots
