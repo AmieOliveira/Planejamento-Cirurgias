@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import pdb
 
-PENALTIES = [90, 20, 5, 1]
+PENALTIES = [90, 20, 8, 1]
 DEADLINES = [3, 15, 60, 365]
 
 def is_overlap(x1, x2, y1, y2):

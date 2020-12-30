@@ -83,6 +83,10 @@ function target_fn(instance, solution, verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
+    if verbose
+        sort!(by = x -> x[1], surgeries)
+    end
+    
     total = 0
     for s in surgeries
         # println("f$(s) = $(eval_surgery(s, rooms, PENALTIES, sc_d, sc_r, sc_h, e, sg_tt, sc_ts))")

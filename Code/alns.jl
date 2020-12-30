@@ -228,7 +228,7 @@ function greedy_insertion_single!(instance, solution; verbose=false)
                                 scheduled = true
 
                                 if verbose
-                                    println("DEGUB:\t\tGreedy Insertion: Scheduled surgery ", 
+                                    println("DEBUG:\t\tGreedy Insertion: Scheduled surgery ", 
                                             surgery[IDX_S])
                                 end
                                 break
@@ -239,7 +239,7 @@ function greedy_insertion_single!(instance, solution; verbose=false)
                             scheduled = true
 
                             if verbose
-                                println("DEGUB:\t\tGreedy Insertion: Scheduled surgery ", 
+                                println("DEBUG:\t\tGreedy Insertion: Scheduled surgery ", 
                                         surgery[IDX_S])
                             end
                             break
