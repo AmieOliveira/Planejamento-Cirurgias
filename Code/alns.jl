@@ -60,7 +60,7 @@ function worst_removal_multiple!(instance, solution)
     return solution
 end
 
-function shaw_removal_day!(instance, solution; verbose=false)
+function shaw_removal_day_room!(instance, solution; verbose=false)
     # Por enquanto estou fazendo totalmente aleatorio, mas poderia utilizar o valor da 
     # FO na escolha
     surgeries, rooms = instance
@@ -82,6 +82,22 @@ function shaw_removal_day!(instance, solution; verbose=false)
         #println(slot)
         s = filter(x -> x[IDX_S] == slot[SLOT_S], surgeries)[1]
         unschedule_surgery(instance, solution, s)
+    end
+
+    return solution
+end
+
+function shaw_removal_day!(instance, solution; verbose=false)
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+    random_surgery = rand(scheduled_surgeries)
+    random_day = sc_d[random_surgery[IDX_S]]
+
+    surgeries_to_remove = get_surgeries_scheduled_to_day(instance, solution, random_day)
+    for surgery in surgeries_to_remove
+        solution = unschedule_surgery(instance, solution, surgery)
     end
 
     return solution
@@ -372,9 +388,10 @@ REMOVAL_OPERATORS = [
     ("random   ", random_removal!),
     ("worst single", worst_removal_single!),
     ("worst multiple", worst_removal_multiple!),
-    ("shaw_day", shaw_removal_day!),
-    ("shaw_surgeon", shaw_removal_doc!),
-    ("shaw_specialty", shaw_removal_esp!)
+    ("shaw day", shaw_removal_day!),
+    ("shaw day room", shaw_removal_day_room!),
+    ("shaw surgeon", shaw_removal_doc!),
+    ("shaw specialty", shaw_removal_esp!)
 ]
 
 INSERTION_OPERATORS = [
@@ -400,9 +417,11 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         rem_scores, ins_scores = zeros(rem_ops), zeros(ins_ops)
         rem_freq, ins_freq = ones(rem_ops), ones(ins_ops)
 
-        print("T > Tf: $(round(T, digits=3)) > $(Tf)")
-        print("\t best: $(fo_best), curr: $(fo_s)")
-        println("")
+        if verbose
+            print("T > Tf: $(round(T, digits=3)) > $(Tf)")
+            print("\t best: $(fo_best), curr: $(fo_s)")
+            println("")
+        end
 
         while iter < SA_max
             iter += 1

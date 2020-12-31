@@ -86,7 +86,7 @@ function target_fn(instance, solution, verbose=false)
     if verbose
         sort!(by = x -> x[1], surgeries)
     end
-    
+
     total = 0
     for s in surgeries
         # println("f$(s) = $(eval_surgery(s, rooms, PENALTIES, sc_d, sc_r, sc_h, e, sg_tt, sc_ts))")
@@ -158,6 +158,14 @@ end
 function get_number_of_surgeons(instance)
     surgeries, rooms = instance
     maximum([g_s for (_, _, _, _, g_s, _) in surgeries])
+end
+
+function get_surgeries_scheduled_to_day(instance, solution, day)
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    slots = collect(Iterators.flatten(sc_ts[day, :]))
+    [get_surgery(instance, slot[SLOT_S]) for slot in slots]
 end
 
 function can_surgeon_fit_surgery_in_week(instance, solution, surgery)
