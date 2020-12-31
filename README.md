@@ -54,13 +54,18 @@ Inclusive maximizar o espaço livre
 - Instâncias para teste
 - Tunar parâmetros do ALNS!
     - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
-        ⟹ Está sorteando, mas quase não encontra soluções melhores do que a atual! Problema 
-        nas opções de operadores, nos operadores em si, nos parâmetros ou em outra coisa?
+        ⟹ Observação empírica mostra que os melhores operadores (por scores) dependem da 
+        instância avaliada
     - Análise de como está a exploração do espaço de busca (será que está explorando de fato 
     alternativas ou ficando sempre na redondeza da solução inicial?)
+        ⟹ **Screenshots das soluções parciais do algoritmo!** Salvar algumas soluções ao 
+        longo do ALNS e usar o plot_solution para uma comparação visual
+    - Análise da evolução da F.O. ao longo do algoritmo: salvar os valores da F.O. das 
+    soluções parciais s (aceitas) e plotar um gráfico da evolução no tempo
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
 ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
 - Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
+- plot_solution: Colocar o valor da F.O. na imagem
 
 ---
 
