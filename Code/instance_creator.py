@@ -1,18 +1,21 @@
 import pandas as pd
 import numpy as np
 import argparse
+import os
 
 if __name__ == '__main__':
 	"""
 	Example:
-		python instance_creator.py --output "instance2.csv" --surgery_total 50 --priority 1 4 --waiting 1 20 --duration 2 20 --specialties 4 --surgeons 4
+		python instance_creator.py --path "../Data/" --surgery_total 50 --priority 1 4 --waiting 1 20 --duration 2 20 --specialties 4 --surgeons 4
 	"""
 
 	DEADLINES = [3, 15, 60, 365]
 	
 	parser = argparse.ArgumentParser(description='Surgery instance generator.')
-	parser.add_argument('--output', '-o', metavar='o', type=str, nargs=1, \
+	parser.add_argument('--path', '-fp', metavar='fp', type=str, nargs=1, \
 		help='filepath of the CSV output', required=True)
+	parser.add_argument('--filename', '-fn', metavar='fn', type=str, nargs=1, \
+		help='name of the CSV output', required=False)
 	parser.add_argument('--surgery_total', '-s', metavar='s', type=int, nargs=1, \
 		help='total number of surgeries', required=True)
 	parser.add_argument('--priority', '-p', metavar='p', type=int, nargs=2, \
@@ -53,5 +56,11 @@ if __name__ == '__main__':
 		waiting_time = np.random.random_integers(0, max_waiting)
 		data["Dias_espera (w)"].append(waiting_time)
 
+	try:
+		output_filename = args.filename[0]
+	except:
+		output_filename = f"fullrand_s{args.surgery_total[0]}_p{args.priority[0]}-{args.priority[1]}_w{args.waiting[0]}" \
+						+ f"_t{args.duration[0]}-{args.duration[1]}_e{args.specialties[0]}_g{args.surgeons[0]}.csv"
+
 	df = pd.DataFrame(data=data)
-	df.to_csv(args.output[0], sep=';', index=False)
+	df.to_csv(os.path.join(args.path[0], output_filename), sep=';', index=False)
