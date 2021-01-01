@@ -9,18 +9,18 @@ include("alns.jl")
 # setup
 # -- paths
 # data_dir = "Dados/"
-# data_root = "toy4"    # "fullrand_1000cirurgias"
+# data_root = "toy1"    # "fullrand_1000cirurgias"
 data_dir = "../Dados/"
 # data_root = "fullrand_1000cirurgias"
-# data_root = "fullrand_s20_p1-4_w0-15_t4-16_e5_g8"
-data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
-# data_root = "fullrand_s80_p1-4_w1-40_t2-20_e10_g14"
+data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
+# data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
+# data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
 
 out_dir = "../Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 6
+rooms = 10
 
 # Solution set up
 instance = (surgeries, rooms)
@@ -44,9 +44,9 @@ solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 #println("")
 #println("Target function: ", fn)
 
-solution = @time alns_solve(instance, solution, 
-                            SA_max=1000, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=1,
-                            verbose=true)
+solution, history = @time alns_solve(instance, solution, 
+		                             SA_max=1000, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=1,
+		                             verbose=true)
 print_solution(instance, solution)
 solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 
@@ -59,6 +59,8 @@ println("")
 println("Naive target function: $naive_fn")
 println("ALNS target function:  $alns_fn")
 
+println("history: $history")
+plot_operator_history(history)
 
 # bad = get_badly_scheduled_surgeries(surgeries, solution)
 # plot_solution(instance, solution, @sprintf("%s%s-alns", out_dir, data_root))

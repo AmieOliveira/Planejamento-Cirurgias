@@ -400,6 +400,36 @@ INSERTION_OPERATORS = [
     ("greedy multiple", greedy_insertion_multiple!)
 ]
 
+function maintain_history(history, target_fn, rem_scores, ins_scores)
+    target_fns, rem_history, ins_history = history
+    push!(target_fns, target_fn)
+    push!(rem_history, rem_scores)
+    push!(ins_history, ins_scores)
+    return (target_fns, rem_history, ins_history)
+end
+
+function plot_operator_history(history)
+    target_fns, rem_history, ins_history = history
+    x = 1:length(rem_history)
+
+    p1, p2, p3 = [plot(legend = :outerright, legendfontsize = 5, legendtitlefontsize=5, titlefontsize=8) for _ in 1:3]
+    
+    plot(p1, legendtitle="Removal operators", ylabel="Scores")
+    for i in 1:length(REMOVAL_OPERATORS)
+        plot!(p1, x, [h[i] for h in rem_history], label=REMOVAL_OPERATORS[i][1])
+    end
+
+    plot(p2, legendtitle="Insertion operators", ylabel="Scores")
+    for i in 1:length(INSERTION_OPERATORS)
+        plot!(p2, x, [h[i] for h in ins_history], label=INSERTION_OPERATORS[i][1])
+    end
+
+    plot!(p3, x, target_fns, xlabel="Iterations", label="target function", lw=3)
+    
+    plot(p1, p2, p3, layout=(3, 1))
+    gui()
+end
+
 function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
     s = clone_sol(initial_solution)
     s_best = clone_sol(initial_solution)
@@ -412,6 +442,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
 
     rem_ops, ins_ops = length(REMOVAL_OPERATORS), length(INSERTION_OPERATORS)
     rem_weights, ins_weights = ones(rem_ops), ones(ins_ops)
+    history = ([], [], [])
 
     while T > Tf    # TODO: Aquelas coisas de criterio de parada?
         rem_scores, ins_scores = zeros(rem_ops), zeros(ins_ops)
@@ -459,6 +490,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         T = α * T
         iter = 0
 
+        maintain_history(history, target_fn(instance, s), rem_scores, ins_scores)
         for i in 1:length(rem_weights)
             rem_weights[i] = (1 - r) * rem_weights[i] + r * (rem_scores[i] / rem_freq[i])
         end
@@ -481,5 +513,5 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         end
     end
 
-    s_best
+    s_best, history
 end
