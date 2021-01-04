@@ -527,7 +527,8 @@ REMOVAL_OPERATORS = [
 INSERTION_OPERATORS = [
     ("random    ", random_insertion!),
     ("greedy single", greedy_insertion_single!),
-    ("greedy multiple", greedy_insertion_multiple!)
+    ("greedy multiple", greedy_insertion_multiple!),
+    ("regret", regret_insertion!)
 ]
 
 function maintain_history(history, target_fn, rem_scores, ins_scores)

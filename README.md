@@ -35,8 +35,11 @@ tempo de limpeza), a cirurgia e o cirurgião.
 
 
 ## TODOs:
-- Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
-Inclusive maximizar o espaço livre
+- Reorganização das cirurgias (para maximizar o espaço livre)
+    ⟹ Ideia: diferentes funções que realizam diferentes tipos de otimização de espaço, e retornam uma booleana dizendo se o dia está otimizado ou não
+    - Deslocar todas as cirurgias para o início
+    - Deslocar cirurgias para o fim
+    - ...
 - Adicionar outros operadores de inserção e remoção
     - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
         ⟹ Otimização para ser feita se acharmos que o código está lento
