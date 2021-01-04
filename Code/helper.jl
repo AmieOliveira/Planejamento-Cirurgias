@@ -83,9 +83,10 @@ function target_fn(instance, solution, verbose=false)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    if verbose
-        sort!(by = x -> x[1], surgeries)
-    end
+    # if verbose
+        # sort!(by = x -> x[1], surgeries)
+    # end
+    sort!(by = x -> x[1], surgeries)
 
     total = 0
     for s in surgeries
@@ -183,6 +184,7 @@ function can_surgeon_fit_surgery_in_day(instance, solution, surgery, day)
 end
 
 function can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, day, timeslot_start, timeslot_end)
+    surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
@@ -422,84 +424,14 @@ function perDay_to_initialFormat(s_daily, n_surgeries)
     return sc_d, sc_r, sc_h, e, sg_tt, sc_ts
 end
 
-function shuffle_day(dict_cirurgias)
-    surgs, docs = dict_cirurgias
-    rooms =  keys(surgs)
-    ret = copy(surgs)
-    ret_doc = copy(docs)
+# function eliminate_padding(instance, solution)
+#     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+#     surgeries, rooms = instance
 
-    for r in rooms
-        if ret[r][TIMESLOTS][1][1] > 1
-            # TODO: deslocar para 1
-        end
-
-        nslots = length(ret[r][IDX])
-        for slot_idx in 2:nslots
-            if ret[r][TIMESLOTS][slot_idx][1] - ret[r][TIMESLOTS][slot_idx-1][2] > LENGTH_INTERVAL
-                # check surgeon availability. if available, bring closer
-                surgeon = ret[r][SURGEON][slot_idx]
-
-                clash = false
-
-                duration = ret[r][TIMESLOTS][slot_idx][2]-ret[r][TIMESLOTS][slot_idx][1]
-                init = ret[r][TIMESLOTS][slot_idx-1][2] + LENGTH_INTERVAL
-                fim = min( ret[r][TIMESLOTS][slot_idx][1] - 1, 
-                           init + ret[r][TIMESLOTS][slot_idx][2]-ret[r][TIMESLOTS][slot_idx][1] )
-
-                doctor_slot = nothing
-                last = nothing
-
-                for (i_ds, d_slot) in enumerate(ret_doc[surgeon])
-                    if d_slot[1] == ret[r][TIMESLOTS][slot_idx][1] &&
-                        d_slot[2] == ret[r][TIMESLOTS][slot_idx][2]
-                        doctor_slot = i_ds
-                    end
-                    last = i_ds
-
-                    if d_slot[1] > fim
-                        break
-                    end
-
-                    clash = intervalClash(d_slot, [init, fim])
-                    if clash
-                        break
-                    end
-                end
-                
-                if !( clash )
-                    ret[r][TIMESLOTS][slot_idx] = [init, init + duration]
-                    
-                    # TODO: Acho que esqueci de considerar o tempo de limpeza aqui
-
-                    if doctor_slot === nothing
-                        for i in last+1:length(ret_doc[surgeon])
-                            if d_slot[1] == ret[r][TIMESLOTS][slot_idx][1] &&
-                                d_slot[2] == ret[r][TIMESLOTS][slot_idx][2]
-                                doctor_slot = i_ds
-                                break
-                            end
-                        end
-                    end
-                    ret_doc[surgeon][doctor_slot] = [init, init + duration]
-                end
-
-                # Por enquanto so estou ajustando por trazer as cirurgias mais para o inicio do dia
-                # TODO: Na real tenho que discutir o algoritmo... tem muitas possibilidades, 
-                # como fazer de maneira eficiente?
-            end
-        end
-    end
-
-    return ret
-end
-
-function shuffle_schedule(instance, solution, n_doctors)
-    c_dias, docs = surgeries_per_day(instance, solution, n_doctors)
-
-    for d in 1:DAYS
-        c_dias[d] = shuffle_day(c_dias[d], docs[d])
-    end
-    
-    sol = perDay_to_initialFormat(c_dias, length(solution[1]))
-    return sol
-end
+#     for day in 1:DAYS
+#         for room in 1:rooms
+#             free_timeslots = get_free_timeslots(instance, solution, room, day)
+            
+#         end
+#     end
+# end
