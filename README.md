@@ -51,7 +51,10 @@ Inclusive maximizar o espaço livre
     - ~~Inserção aleatória~~ ✓
     - Quais outras inserções e remoções? (Olhar material sugerido)
     - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo
-- Instâncias para teste
+    - Verificar o impacto de tirar algumas operações no resultado final obtido
+        ⟹ Será que o ótimo local para o qual converge vai ser o mesmo se ele nao usar 
+        os 'singles', por exemplo?
+- Implementar parada por número de iterações sem melhora
 - Tunar parâmetros do ALNS!
     - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
         ⟹ Observação empírica mostra que os melhores operadores (por scores) dependem da 
@@ -62,9 +65,12 @@ Inclusive maximizar o espaço livre
         longo do ALNS e usar o plot_solution para uma comparação visual
     - Análise da evolução da F.O. ao longo do algoritmo: salvar os valores da F.O. das 
     soluções parciais s (aceitas) e plotar um gráfico da evolução no tempo
+- Instâncias para teste ✓ (Esperando os outros grupos)
+- Assinalar quais instâncias parecem mais difíceis para o ALNS
 - Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
 ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
 - Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
+- Plot dos scores: mudar cores para ficar mais diferente, e salvar em PDF.
 - plot_solution: Colocar o valor da F.O. na imagem
 
 ---
