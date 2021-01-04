@@ -6,6 +6,8 @@ function random_removal!(instance, solution)
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
 
     qt_to_remove = rand(0:2)
+    altered = []
+
     for _ in 1:qt_to_remove
         if length(scheduled_surgeries) == 0
             return solution
@@ -14,9 +16,16 @@ function random_removal!(instance, solution)
         pos_to_del = rand(1:length(scheduled_surgeries))
 
         sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+        idx_s, p_s, w_s, e_s, g_s, t_s = scheduled_surgeries[pos_to_del]
+        
+        push!(altered, (sc_d[idx_s], sc_r[idx_s]))
 
         solution = unschedule_surgery(instance, solution, scheduled_surgeries[pos_to_del])
         deleteat!(scheduled_surgeries, pos_to_del)
+    end
+
+    for (day, room) in unique(altered)
+        solution, ok = squeeze_surgeries_up!(instance, solution, day, room)
     end
 
     solution
@@ -40,7 +49,12 @@ function worst_removal_single!(instance, solution)
         end
     end
 
+    day = sc_d[worst_surgery[IDX_S]]
+    room = sc_r[worst_surgery[IDX_S]]
+
     solution = unschedule_surgery(instance, solution, worst_surgery)
+
+    solution, ok = squeeze_surgeries_up(instance, solution, day, room)
 
     return solution
 end
@@ -125,8 +139,19 @@ function shaw_removal_doc!(instance, solution; verbose=false)
         #println("\tSet of surgeries: ")
     end
 
+    altered = []
+
     for s in to_delete
+        sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+        idx_s, p_s, w_s, e_s, g_s, t_s = s
+
+        push!(altered, (sc_d[idx_s], sc_r[idx_s]))
+
         unschedule_surgery(instance, solution, s)
+    end
+
+    for (day, room) in unique(altered)
+        solution, ok = squeeze_surgeries_up!(instance, solution, day, room)
     end
 
     # FIXME: Será que seria melhor fazer pelo proprio numero de cirurgioes? 

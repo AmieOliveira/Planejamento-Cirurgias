@@ -153,7 +153,8 @@ end
 
 function get_surgery(instance, id)
     surgeries, rooms = instance
-    surgeries[id]
+    
+    return filter(s -> s[1] == id, surgeries)[1]
 end
 
 function get_number_of_surgeons(instance)
@@ -352,90 +353,61 @@ function intervalClash(interval1, interval2)
     return true
 end
 
-# TODO: Fix shuffle function
-TIMESLOTS = 1
-IDX = 2
-SURGEON = 3
-function surgeries_per_day(instance, solution, n_docs)
+function squeeze_surgeries_up!(instance, solution, day, room)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     surgeries, rooms = instance
 
-    # TODO: Fazer array
-    c_dias = Dict(i => 
-                Dict(j => [Array{Int64}[], Int64[], Int64[]] for j in 1:rooms) 
-                for i in 1:DAYS)
-    docs = Dict(i => Dict(doc => Array{Int64}[] for doc in 1:n_docs) for i in 1:DAYS)
+    fixed = true
 
-    for s in surgeries
-        idx_s, p_s, w_s, e_s, g_s, t_s = s
+    timeslots = sc_ts[day, room]
 
-        if !(sc_d[idx_s] === nothing)
+    println("Timeslots: ", timeslots)
 
-            dia_s = sc_d[idx_s]
-            sala_s = sc_r[idx_s]
-            hora_s = sc_h[idx_s]
+    i = 1
+    init_i = timeslots[i][SLOT_INIT]
+    if init_i > 1
+        idx_s = timeslots[i][SLOT_S]
+        println("Cirurgia: ", idx_s)
+        surgery = get_surgery(instance, idx_s)
+        idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
-            s_slot = [hora_s, hora_s + t_s - 1]
+        slot_end = min(t_s+LENGTH_INTERVAL, init_i-1)
 
-            push!(c_dias[dia_s][sala_s][TIMESLOTS], s_slot)
-            push!(c_dias[dia_s][sala_s][IDX], idx_s)
-            push!(c_dias[dia_s][sala_s][SURGEON], g_s)
-            
-            d_slot = [hora_s,  hora_s + t_s - 1 + LENGTH_INTERVAL]
-            push!(docs[sc_d][g_s], d_slot)
-        end
-
-    end
-
-    for d in 1:DAYS
-        for r in 1:rooms
-            permutacao = sortperm( c_dias[d][r][TIMESLOTS], by = x -> x[1] )
-
-            for i in 1:3
-                c_dias[d][r][i] = c_dias[d][r][i][permutacao]
-            end
-
-        end
-
-        for doc in 1:n_docs
-            sort!(docs[d][doc], by = x -> x[1])
+        if can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, day, 
+                                               1, slot_end)
+            solution = unschedule_surgery(instance, solution, surgery)
+            solution = schedule_surgery(instance, solution, surgery, day, room, 1)
+            println("scheduling ", idx_s, " for time ", 1)
+        else
+            fixed = false
+            # TODO: Check if I want to say it is false in all cases this happens
         end
     end
 
-    return c_dias, docs
+    while i < length(timeslots)
+        i += 1
+        slot_init = timeslots[i-1][SLOT_END] + 1
+        init_i = timeslots[i][SLOT_INIT]
+
+        if init_i == slot_init
+            continue    # Already squeezed
+        end
+
+        idx_s = timeslots[i][SLOT_S]
+        surgery = get_surgery(instance, idx_s)
+        idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+        slot_end = min(slot_init + t_s + LENGTH_INTERVAL - 1, init_i - 1)
+
+        if can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, day, 
+                                               slot_init, slot_end)
+            solution = unschedule_surgery(instance, solution, surgery)
+            solution = schedule_surgery(instance, solution, surgery, day, room, slot_init)
+            println("scheduling ", idx_s, " for time ", slot_init)
+        else
+            fixed = false
+        end
+    end
+
+    return solution, fixed
 end
-
-function perDay_to_initialFormat(s_daily, n_surgeries)
-    # Função inversa de surgeries_per_day (retorna a 'solution' equivalente)
-    surgs, docs = s_daily
-
-    sc_d = zeros(Int, n_surgeries)
-    sc_r = zeros(Int, n_surgeries)
-    sc_h = zeros(Int, n_surgeries)
-
-    for d in 1:DAYS
-        for r in keys(s_daily[d])
-            for i in 1:length(s_daily[d][r][IDX])
-                idx = s_daily[d][r][IDX][i]
-
-                sc_d[idx] = d
-                sc_r[idx] = r
-                sc_h[idx] = s_daily[d][r][TIMESLOTS][i][1]
-            end
-        end
-    end
-
-    return sc_d, sc_r, sc_h, e, sg_tt, sc_ts
-end
-
-# function eliminate_padding(instance, solution)
-#     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
-#     surgeries, rooms = instance
-
-#     for day in 1:DAYS
-#         for room in 1:rooms
-#             free_timeslots = get_free_timeslots(instance, solution, room, day)
-            
-#         end
-#     end
-# end

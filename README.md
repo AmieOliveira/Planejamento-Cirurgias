@@ -37,9 +37,11 @@ tempo de limpeza), a cirurgia e o cirurgião.
 ## TODOs:
 - Reorganização das cirurgias (para maximizar o espaço livre)
     ⟹ Ideia: diferentes funções que realizam diferentes tipos de otimização de espaço, e retornam uma booleana dizendo se o dia está otimizado ou não
-    - Deslocar todas as cirurgias para o início
+    - ~~Deslocar todas as cirurgias para o início~~ ✓
     - Deslocar cirurgias para o fim
-    - ...
+    - (Ideia: solucoes mais complexas poderiam ser feitas tentando retirar uma cirurgia, 
+    deslocar todas para o inicio ou para o final, e depois colocar a cirurgia retirada de 
+    maneira adequada)
 - Adicionar outros operadores de inserção e remoção
     - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
         ⟹ Otimização para ser feita se acharmos que o código está lento
