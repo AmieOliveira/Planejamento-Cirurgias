@@ -8,6 +8,9 @@ include("alns.jl")
 
 data_dir = "../Dados/"
 files = [
+	("toy1", 1),
+	("toy2", 1),
+	("toy4", 1),
 	("fullrand_s50_p1-4_w20_t2-10_e5_g10", 4),
 	("fullrand_s50_p1-4_w40_t2-20_e10_g20", 4),
 	("fullrand_s50_p1-4_w40_t2-20_e10_g20", 5)

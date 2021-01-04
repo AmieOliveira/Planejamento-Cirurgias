@@ -76,7 +76,11 @@ tempo de limpeza), a cirurgia e o cirurgião.
 ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
 - Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
 - Plot dos scores: mudar cores para ficar mais diferente, e salvar em PDF.
-- plot_solution: Colocar o valor da F.O. na imagem
+- plot_solution: 
+    - Colocar o valor da F.O. na imagem
+    - Colocar cirurgião de cada cirurgia (por cor? por texto?)
+    - Plot alternativa: um pdf por dia, mostrando todas as salas lado a lado 
+    (ia facilitar a visualização da solução!)
 
 ---
 
