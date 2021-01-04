@@ -38,16 +38,16 @@ tempo de limpeza), a cirurgia e o cirurgião.
 - Função de Shuffle das cirurgias de um mesmo dia (sem perder a viabilidade) - 
 Inclusive maximizar o espaço livre
 - Adicionar outros operadores de inserção e remoção
-    - Fazer operadores de inserção/remoção retornarem o valor da F.O.? (Avaliar)
+    - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
+        ⟹ Otimização para ser feita se acharmos que o código está lento
 	- Qual quantidade de cirurgias retirar nas remoções? (Avaliar)
     - ~~Pior remoção~~ ✓
     - Remoção Shaw: por dias, por cirurgiões ou por especialidade (✓)
         * Discutir função por cirurgiões
         * Funções não estão independentes da estrutura de dados (problema?)
-    - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade 
-    tendenciosa para cirurgias com piores índices?
+    - Remoção Shaw: fazer versão aleatória e versão determinística? Fazer uma probabilidade tendenciosa para cirurgias com piores índices?
     - ~~Inserção Gulosa adicionando todas as cirurgias possíveis~~ ✓
-    - Inserção por arrependimento
+    - ~~Inserção por arrependimento~~ ✓
     - ~~Inserção aleatória~~ ✓
     - Quais outras inserções e remoções? (Olhar material sugerido)
     - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo

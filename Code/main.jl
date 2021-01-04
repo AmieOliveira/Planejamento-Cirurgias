@@ -8,19 +8,20 @@ include("alns.jl")
 
 # setup
 # -- paths
-# data_dir = "Dados/"
-# data_root = "toy1"    # "fullrand_1000cirurgias"
-data_dir = "../Dados/"
+data_dir = "Dados/"
+# data_dir = "../Dados/"
+data_root = "toy1"
 # data_root = "fullrand_1000cirurgias"
-data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
+# data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
 # data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
 # data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
 
-out_dir = "../Soluções/"
+out_dir = "Soluções/"
+# out_dir = "../Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 10
+rooms = 1
 
 # Solution set up
 instance = (surgeries, rooms)
@@ -35,10 +36,10 @@ println("Target function: ", naive_fn)
 # plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
 solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 
-#solution = random_removal(instance, solution)
-#solution = random_removal(instance, solution)
-#solution = random_removal(instance, solution)
-#solution = random_removal(instance, solution)
+#solution = random_removal!(instance, solution)
+#solution = random_removal!(instance, solution)
+#solution = random_removal!(instance, solution)
+#solution = random_removal!(instance, solution)
 #print_solution(instance, solution)
 #fn = target_fn(instance, solution)
 #println("")
@@ -46,7 +47,7 @@ solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 
 solution, history = @time alns_solve(instance, solution, 
 		                             SA_max=1000, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=1,
-		                             verbose=true)
+		                             verbose=false)
 print_solution(instance, solution)
 solution_to_csv("../Dados/tmp_solution.csv", instance, solution)
 

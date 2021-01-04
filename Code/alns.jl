@@ -32,7 +32,7 @@ function worst_removal_single!(instance, solution)
     worst_val = 0
         
     for surgery in scheduled_surgeries
-        val = eval_surgery(surgery, rooms, sc_d[surgery[IDX_S]], false)
+        val = eval_surgery(surgery, sc_d[surgery[IDX_S]], false)
 
         if val > worst_val
             worst_surgery = surgery
@@ -46,6 +46,8 @@ function worst_removal_single!(instance, solution)
 end
 
 function worst_removal_multiple!(instance, solution)
+    # TODO: refazer para nao chamar a single! 
+    #   Isso é tempo de verificacao de todas as cirurgias varias vezes
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
@@ -355,6 +357,134 @@ function random_insertion!(instance, solution; verbose=false)
                     end
                 end
             end
+        end
+    end
+
+    return solution
+end
+
+function regret_insertion!(instance, solution; verbose=false)
+    surgeries, rooms = instance
+    unsc_surgeries = get_unscheduled_surgeries(solution, surgeries)
+    L = length(unsc_surgeries)
+    
+    if L == 0
+        if verbose
+            println("WARNING:\tRegret Insertion: No surgeries to add")
+        end
+        return solution
+    end
+
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    ∆f_max = 0
+    s_m = nothing
+    day_m = nothing
+    room_m = nothing
+    time_m = nothing
+
+
+    for surgery in unsc_surgeries
+        if !can_surgeon_fit_surgery_in_week(instance, solution, surgery)
+            continue
+        end
+
+        idx_s, p_s, w_s, e_s, g_s, t_s = surgery
+
+        best = 0
+        best_2 = 0
+        day = 0
+        room = 0
+        time = 0
+        
+        # TODO: get best and second best costs
+        for d in 1:DAYS
+            if best_2 ≠ 0
+                break
+            end
+            if !can_surgeon_fit_surgery_in_day(instance, solution, surgery, d)
+                continue
+            end
+
+            for r in 1:rooms
+                if best_2 ≠ 0
+                    break
+                end
+                if (best ≠ 0) && (d == day)
+                    break
+                end
+                free_timeslots = get_free_timeslots(instance, solution, r, d)
+
+                for (timeslot_start, timeslot_end) in free_timeslots
+                    if best_2 ≠ 0
+                        break
+                    end
+                    
+                    if !can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, d, timeslot_start, timeslot_end)
+                        continue
+                    end
+
+                    if e[d, r] == e_s || e[d, r] == 0
+                        if timeslot_end == LENGTH_DAY
+                            if timeslot_start + t_s - 1 <= LENGTH_DAY
+                                if best == 0
+                                    best = eval_surgery(surgery, d, false)
+                                    day = d
+                                    room = r
+                                    time = timeslot_start
+                                else
+                                    best_2 = eval_surgery(surgery, d, false)
+                                end
+                                break
+                            end
+                        elseif t_s + LENGTH_INTERVAL <= (timeslot_end - timeslot_start + 1)
+                            if best == 0
+                                best = eval_surgery(surgery, d, false)
+                                day = d
+                                room = r
+                                time = timeslot_start
+                            else
+                                best_2 = eval_surgery(surgery, d, false)
+                            end
+                            break
+                        end
+                    end
+                end
+            end
+        end
+
+        if (best ≠ 0) && (best_2 == 0)
+            best_2 = eval_surgery(surgery, nothing, false)
+
+            if verbose
+                println("DEBUG:\t\tRegret Insertion: No second day to fit surgery ",
+                        idx_s, ". Cost is the cost of not scheduling.")
+            end
+        end
+
+        ∆f = best_2 - best
+        if ∆f > ∆f_max
+            ∆f_max = ∆f
+            s_m = surgery
+            day_m = day
+            room_m = room
+            time_m = time
+
+            if verbose
+                println("VERBOSE:\tRegret Insertion: Surgery ", idx_s, " has the ",
+                        "highest gap: ", ∆f)
+            end
+        end
+    end
+
+    if !(s_m === nothing)
+        if verbose
+            println("DEGUBG:\t\tRegret Insertion: Scheduled surgery ", s_m[IDX_S])
+        end
+        return schedule_surgery(instance, solution, s_m, day_m, room_m, time_m)
+    else
+        if verbose
+            println("WARNING:\tRegret Insertion: Cannot add any surgery")
         end
     end
 

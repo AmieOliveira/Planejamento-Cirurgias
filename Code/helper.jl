@@ -47,7 +47,7 @@ function emptySolution(instance)
     return (sc_d, sc_h, sc_r, e, sg_tt, sc_ts)
 end
 
-function eval_surgery(surgery, rooms, day_scheduled, verbose)
+function eval_surgery(surgery, day_scheduled, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
     is_scheduled = (day_scheduled != nothing)
@@ -91,7 +91,7 @@ function target_fn(instance, solution, verbose=false)
     total = 0
     for s in surgeries
         # println("f$(s) = $(eval_surgery(s, rooms, PENALTIES, sc_d, sc_r, sc_h, e, sg_tt, sc_ts))")
-        total += eval_surgery(s, rooms, sc_d[s[1]], verbose)
+        total += eval_surgery(s, sc_d[s[1]], verbose)
     end
     
     total
@@ -251,6 +251,10 @@ function get_free_timeslots(instance, solution, room, day)
 
     if length(timeslots) == 0
         return [(1, LENGTH_DAY)]
+    end
+
+    if timeslots[1][SLOT_INIT] ≠ 1
+        push!(free_timeslots, (1, timeslots[1][SLOT_INIT]-1))
     end
 
     for i in 1:(length(timeslots) - 1)
