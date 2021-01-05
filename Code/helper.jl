@@ -28,13 +28,7 @@ SLOT_DOC = 4
 function load_surgeries(filepath)
     surgeries = []
     for row in CSV.File(filepath, comment="#")
-<<<<<<< HEAD
-        println(row)
-
-=======
         # println(row)
-        
->>>>>>> 07369599f26c4e7c52d1ea365062beed12652f53
         surgery = Int64[]
         # (row[1], row[2], row[3], row[4], row[5], row[6])
         for i in 1:6
