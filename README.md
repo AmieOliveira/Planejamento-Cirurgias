@@ -78,9 +78,11 @@ ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do 
 - Plot dos scores: mudar cores para ficar mais diferente, e salvar em PDF.
 - plot_solution: 
     - Colocar o valor da F.O. na imagem
-    - Colocar cirurgião de cada cirurgia (por cor? por texto?)
-    - Plot alternativa: um pdf por dia, mostrando todas as salas lado a lado 
+    - Assinalar cirurgião de cada cirurgia (por cor? por texto?)
+    - Plot alternativa: "dia por salas" um pdf por dia, mostrando todas as salas lado a lado 
     (ia facilitar a visualização da solução!)
+    - Plot alternativa 2: Gráfico dos cirurgiões por dia (assinalando a sala) -> um pdf por 
+    cirurgiao (com todos os dias) ou um por dia (com todos os cirurgioes)?
 
 ---
 
