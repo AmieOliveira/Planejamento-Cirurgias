@@ -54,7 +54,7 @@ function worst_removal_single!(instance, solution)
 
     solution = unschedule_surgery(instance, solution, worst_surgery)
 
-    solution, ok = squeeze_surgeries_up(instance, solution, day, room)
+    solution, ok = squeeze_surgeries_up!(instance, solution, day, room)
 
     return solution
 end

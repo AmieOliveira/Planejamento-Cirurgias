@@ -29,7 +29,7 @@ function load_surgeries(filepath)
     surgeries = []
     for row in CSV.File(filepath, comment="#")
         println(row)
-        
+
         surgery = Int64[]
         # (row[1], row[2], row[3], row[4], row[5], row[6])
         for i in 1:6
@@ -372,7 +372,10 @@ function squeeze_surgeries_up!(instance, solution, day, room)
 
     timeslots = sc_ts[day, room]
 
-    println("Timeslots: ", timeslots)
+    if length(timeslots) == 0
+        println("WARNING:\tSqueeze Up: Function called to reorganize surgeries when there are none.")
+        return solution, fixed
+    end
 
     i = 1
     init_i = timeslots[i][SLOT_INIT]
