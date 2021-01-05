@@ -37,15 +37,6 @@ println("Target function: ", naive_fn)
 # plot_solution(instance, solution, @sprintf("%s%s-greedy", out_dir, data_root))
 solution_to_csv("$(data_dir)sol-greedy_$(data_root).csv", instance, solution)
 
-#solution = random_removal!(instance, solution)
-#solution = random_removal!(instance, solution)
-#solution = random_removal!(instance, solution)
-#solution = random_removal!(instance, solution)
-#print_solution(instance, solution)
-#fn = target_fn(instance, solution)
-#println("")
-#println("Target function: ", fn)
-
 solution, history = @time alns_solve(instance, solution, 
 		                             SA_max=1000, α=0.9, T0=60, Tf=1, r=0.4, σ1=10, σ2=5, σ3=1,
 		                             verbose=true)
