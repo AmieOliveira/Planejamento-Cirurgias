@@ -365,6 +365,8 @@ function intervalClash(interval1, interval2)
 end
 
 function squeeze_surgeries_up!(instance, solution, day, room; verbose = false)
+    # return solution, false
+
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     surgeries, rooms = instance
 
@@ -374,6 +376,10 @@ function squeeze_surgeries_up!(instance, solution, day, room; verbose = false)
 
     if verbose
         println("Timeslots: ", timeslots)
+    end
+
+    if length(timeslots) == 0
+        return solution, fixed
     end
 
     i = 1
