@@ -1,4 +1,4 @@
-using Random
+using CSV, Random
 
 LENGTH_INTERVAL = 2
 LENGTH_DAY = 46
@@ -27,8 +27,19 @@ SLOT_DOC = 4
 
 function load_surgeries(filepath)
     surgeries = []
-    for row in CSV.File(filepath)
-        surgery = (row[1], row[2], row[3], row[4], row[5], row[6])
+    for row in CSV.File(filepath, comment="#")
+        println(row)
+        
+        surgery = Int64[]
+        # (row[1], row[2], row[3], row[4], row[5], row[6])
+        for i in 1:6
+            val = row[i]
+            if typeof(val) == String
+                val = parse(Int64, val)
+            end
+            push!(surgery, val)
+        end
+            
         push!(surgeries, surgery)
     end
     surgeries

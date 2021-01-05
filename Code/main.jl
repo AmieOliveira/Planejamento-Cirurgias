@@ -1,4 +1,4 @@
-using CSV, DataFrames, Printf
+using DataFrames, Printf
 using Debugger
 
 include("helper.jl")
@@ -10,9 +10,10 @@ include("alns.jl")
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
-# data_root = "toy1"
+data_root = "toy1"
+data_root = "Fáceis - f1_toy1"
 # data_root = "fullrand_1000cirurgias"
-data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
+# data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
 # data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
 # data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
 

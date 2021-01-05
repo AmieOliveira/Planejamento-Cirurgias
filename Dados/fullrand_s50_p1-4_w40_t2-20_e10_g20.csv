@@ -49,3 +49,7 @@ Cirurgia (c);Prioridade (p);Dias_espera (w);Especialidade (e);Cirurgião (h);Dur
 48;2;0;3;19;10
 49;3;15;3;7;8
 50;4;3;4;17;2
+# i3: fullrand_s50_p1-4_w40_t2-20_e10_g20
+# 50 cirurgias, prioridades 1~4, tempo de espera uniformemente distribuído entre 0 e 40
+# duração da cirurgia uniformemente distribuída entre 2 e 20, especialidades unif. distribuídas entre 1 e 10
+# ID do cirurgião uniformemente distribuído entre 1 e 20
