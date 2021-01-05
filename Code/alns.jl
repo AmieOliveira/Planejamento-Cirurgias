@@ -408,7 +408,6 @@ function regret_insertion!(instance, solution; verbose=false)
     room_m = nothing
     time_m = nothing
 
-
     for surgery in unsc_surgeries
         if !can_surgeon_fit_surgery_in_week(instance, solution, surgery)
             continue
@@ -556,16 +555,17 @@ INSERTION_OPERATORS = [
     ("regret", regret_insertion!)
 ]
 
-function maintain_history(history, target_fn, rem_scores, ins_scores)
-    target_fns, rem_history, ins_history = history
-    push!(target_fns, target_fn)
+function maintain_history(history, target_fn_curr, target_fn_best, rem_scores, ins_scores)
+    target_fns_curr, target_fns_best, rem_history, ins_history = history
+    push!(target_fns_best, target_fn_best)
+    push!(target_fns_curr, target_fn_curr)
     push!(rem_history, rem_scores)
     push!(ins_history, ins_scores)
-    return (target_fns, rem_history, ins_history)
+    return (target_fns_curr, target_fns_best, rem_history, ins_history)
 end
 
 function plot_operator_history(history)
-    target_fns, rem_history, ins_history = history
+    target_fns_curr, target_fns_best, rem_history, ins_history = history
     x = 1:length(rem_history)
 
     p1, p2, p3 = [plot(legend = :outerright, legendfontsize = 5, legendtitlefontsize=5, titlefontsize=8) for _ in 1:3]
@@ -580,7 +580,8 @@ function plot_operator_history(history)
         plot!(p2, x, [h[i] for h in ins_history], label=INSERTION_OPERATORS[i][1])
     end
 
-    plot!(p3, x, target_fns, xlabel="Iterations", label="target function", lw=3)
+    plot!(p3, x, target_fns_curr, xlabel="Iterations", label="target function (curr)", lw=3)
+    plot!(p3, x, target_fns_best, label="target function (best)", lw=3, linestyle=:dash)
     
     plot(p1, p2, p3, layout=(3, 1))
     gui()
@@ -598,7 +599,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
 
     rem_ops, ins_ops = length(REMOVAL_OPERATORS), length(INSERTION_OPERATORS)
     rem_weights, ins_weights = ones(rem_ops), ones(ins_ops)
-    history = ([], [], [])
+    history = ([], [], [], [])
 
     while T > Tf    # TODO: Aquelas coisas de criterio de parada?
         rem_scores, ins_scores = zeros(rem_ops), zeros(ins_ops)
@@ -646,7 +647,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
         T = α * T
         iter = 0
 
-        maintain_history(history, target_fn(instance, s), rem_scores, ins_scores)
+        maintain_history(history, fo_s, fo_best, rem_scores, ins_scores)
         for i in 1:length(rem_weights)
             rem_weights[i] = (1 - r) * rem_weights[i] + r * (rem_scores[i] / rem_freq[i])
         end
