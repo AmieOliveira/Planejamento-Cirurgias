@@ -28,7 +28,7 @@ SLOT_DOC = 4
 function load_surgeries(filepath)
     surgeries = []
     for row in CSV.File(filepath, comment="#")
-        println(row)
+        # println(row)
         
         surgery = Int64[]
         # (row[1], row[2], row[3], row[4], row[5], row[6])
@@ -364,7 +364,7 @@ function intervalClash(interval1, interval2)
     return true
 end
 
-function squeeze_surgeries_up!(instance, solution, day, room)
+function squeeze_surgeries_up!(instance, solution, day, room; verbose = false)
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     surgeries, rooms = instance
 
@@ -372,13 +372,19 @@ function squeeze_surgeries_up!(instance, solution, day, room)
 
     timeslots = sc_ts[day, room]
 
-    println("Timeslots: ", timeslots)
+    if verbose
+        println("Timeslots: ", timeslots)
+    end
 
     i = 1
     init_i = timeslots[i][SLOT_INIT]
     if init_i > 1
         idx_s = timeslots[i][SLOT_S]
-        println("Cirurgia: ", idx_s)
+
+        if verbose
+            println("Cirurgia: ", idx_s)
+        end
+
         surgery = get_surgery(instance, idx_s)
         idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
@@ -388,7 +394,10 @@ function squeeze_surgeries_up!(instance, solution, day, room)
                                                1, slot_end)
             solution = unschedule_surgery(instance, solution, surgery)
             solution = schedule_surgery(instance, solution, surgery, day, room, 1)
-            println("scheduling ", idx_s, " for time ", 1)
+
+            if verbose
+                println("scheduling ", idx_s, " for time ", 1)
+            end
         else
             fixed = false
             # TODO: Check if I want to say it is false in all cases this happens
@@ -414,7 +423,10 @@ function squeeze_surgeries_up!(instance, solution, day, room)
                                                slot_init, slot_end)
             solution = unschedule_surgery(instance, solution, surgery)
             solution = schedule_surgery(instance, solution, surgery, day, room, slot_init)
-            println("scheduling ", idx_s, " for time ", slot_init)
+
+            if verbose
+                println("scheduling ", idx_s, " for time ", slot_init)
+            end
         else
             fixed = false
         end
