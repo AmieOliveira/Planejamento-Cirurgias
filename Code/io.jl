@@ -71,8 +71,8 @@ function rectangle(w, h, x, y)
     return Shape(x .+ [0, w, w, 0, 0], y .+ [0, 0, h, h, 0])
 end
 
-function plot_solution(instance, solution, filename="teste")
-    # TODO: Mudança de cores
+function plot_solution(instance, solution, filename="testeSalas")
+    # TODO: Cirurgioes (especialidades?)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
@@ -103,8 +103,47 @@ function plot_solution(instance, solution, filename="teste")
         end
 
         # TODO: Como fazer sem ter que especificar cada plot?
-        plot(pls[1], pls[2], pls[3], pls[4], pls[5], layout = (DAYS, 1), legend = false)#, legend = false)
+        plot(pls..., layout = (DAYS, 1), legend = false)#, legend = false)
         savefig(@sprintf("%s-%isalas-sala%i.pdf",filename, rooms, r))
+        #close(fig)
+    end
+end
+
+function plot_per_day(instance, solution, filename="testeDias")
+    # FIXME
+    surgeries, rooms = instance
+    sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+
+    dayPeriods = 46
+
+    for d in 1:DAYS
+    #fig = figure()
+        pls = Any[]
+        for r in 1:rooms
+            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
+            #hline()
+            yaxis!(p, @sprintf("Sala %i", r))#, showaxis=false)
+            texts = []
+            for s in surgeries
+                idx_s, p_s, w_s, e_s, g_s, t_s = s
+                if sc_d[idx_s] == d && sc_r[idx_s] == r
+                    s_label = @sprintf("Cirurgia %i", idx_s)
+                    plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label, color=COLORS_P[p_s])
+                    annotate!(sc_h[idx_s]+.5, 0.5, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
+                end
+            end
+            if r == 1
+                title!(DAY_NAMES[d])
+            end
+            if r == rooms
+                xaxis!("Tempo (períodos)")
+            end
+            push!(pls, p)
+        end
+
+        # TODO: Como fazer sem ter que especificar cada plot?
+        plot(pls..., layout = (rooms, 1), legend = false)#, legend = false)
+        savefig(@sprintf("%s-daily-dia%i.pdf",filename, d))
         #close(fig)
     end
 end
