@@ -35,16 +35,26 @@ tempo de limpeza), a cirurgia e o cirurgião.
 
 
 ## TODOs:
+
+- Fazer batch montar média e desvio padrão
+- Implementar parada por número de iterações sem melhora
+- Tunar parâmetros do ALNS!
+    - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
+        ⟹ Observação empírica mostra que os melhores operadores (por scores) dependem da instância avaliada
+    - Análise de como está a exploração do espaço de busca (será que está explorando de fato alternativas ou ficando sempre na redondeza da solução inicial?)
+        ⟹ **Screenshots das soluções parciais do algoritmo!** Salvar algumas soluções ao longo do ALNS e usar o plot_solution para uma comparação visual
+    - Análise da evolução da F.O. ao longo do algoritmo: salvar os valores da F.O. das soluções parciais s (aceitas) e plotar um gráfico da evolução no tempo
+- Plot solution: 
+    - Colocar o valor da F.O. na imagem
+    - Assinalar cirurgião de cada cirurgia (por cor? por texto?)
+    - Plot alternativa: "dia por salas" um pdf por dia, mostrando todas as salas lado a lado (ia facilitar a visualização da solução!)
+    - Plot alternativa 2: Gráfico dos cirurgiões por dia (assinalando a sala) -> um pdf por cirurgiao (com todos os dias) ou um por dia (com todos os cirurgioes)?
 - Reorganização das cirurgias (para maximizar o espaço livre)
     ⟹ Ideia: diferentes funções que realizam diferentes tipos de otimização de espaço, e retornam uma booleana dizendo se o dia está otimizado ou não
     - ~~Deslocar todas as cirurgias para o início~~ ✓
     - Deslocar cirurgias para o fim
-    - (Ideia: solucoes mais complexas poderiam ser feitas tentando retirar uma cirurgia, 
-    deslocar todas para o inicio ou para o final, e depois colocar a cirurgia retirada de 
-    maneira adequada)
+    - (Ideia: solucoes mais complexas poderiam ser feitas tentando retirar uma cirurgia, deslocar todas para o inicio ou para o final, e depois colocar a cirurgia retirada de maneira adequada)
 - Adicionar outros operadores de inserção e remoção
-    - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
-        ⟹ Otimização para ser feita se acharmos que o código está lento
 	- Qual quantidade de cirurgias retirar nas remoções? (Avaliar)
     - ~~Pior remoção~~ ✓
     - Remoção Shaw: por dias, por cirurgiões ou por especialidade (✓)
@@ -57,32 +67,18 @@ tempo de limpeza), a cirurgia e o cirurgião.
     - Quais outras inserções e remoções? (Olhar material sugerido)
     - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo
     - Verificar o impacto de tirar algumas operações no resultado final obtido
-        ⟹ Será que o ótimo local para o qual converge vai ser o mesmo se ele nao usar 
-        os 'singles', por exemplo?
-- Implementar parada por número de iterações sem melhora
-- Tunar parâmetros do ALNS!
-    - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
-        ⟹ Observação empírica mostra que os melhores operadores (por scores) dependem da 
-        instância avaliada
-    - Análise de como está a exploração do espaço de busca (será que está explorando de fato 
-    alternativas ou ficando sempre na redondeza da solução inicial?)
-        ⟹ **Screenshots das soluções parciais do algoritmo!** Salvar algumas soluções ao 
-        longo do ALNS e usar o plot_solution para uma comparação visual
-    - Análise da evolução da F.O. ao longo do algoritmo: salvar os valores da F.O. das 
-    soluções parciais s (aceitas) e plotar um gráfico da evolução no tempo
+        ⟹ Será que o ótimo local para o qual converge vai ser o mesmo se ele nao usar os 'singles', por exemplo?
 - Instâncias para teste ✓ (Esperando os outros grupos)
-- Assinalar quais instâncias parecem mais difíceis para o ALNS
-- Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, 
-ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
-- Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
 - Plot dos scores: mudar cores para ficar mais diferente, e salvar em PDF.
-- plot_solution: 
-    - Colocar o valor da F.O. na imagem
-    - Assinalar cirurgião de cada cirurgia (por cor? por texto?)
-    - Plot alternativa: "dia por salas" um pdf por dia, mostrando todas as salas lado a lado 
-    (ia facilitar a visualização da solução!)
-    - Plot alternativa 2: Gráfico dos cirurgiões por dia (assinalando a sala) -> um pdf por 
-    cirurgiao (com todos os dias) ou um por dia (com todos os cirurgioes)?
+    - Botar best solution em tracejado no plot da target function
+    - Trocar label x pra temperatura
+- Assinalar quais instâncias parecem mais difíceis para o ALNS
+- Análise de quantos quartos são necessários para agendar todas as cirurgias de uma instância, ou para agendar sem ultrapassar o tempo máximo de espera (parte de análise do código)
+- Verificar técnicas e métricas de comparação de meta-heurísticas no PDF "Tema 14"
+- Otimizações:
+    - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
+    - Verificar `can_surgeon_fit_surgery_in_timeslot`
+    - Botar no relatório a diferença de tempo das antigas estruturas pras novas estruturas
 
 ---
 
