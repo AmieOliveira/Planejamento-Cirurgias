@@ -587,7 +587,9 @@ function plot_operator_history(history)
     gui()
 end
 
-function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
+function alns_solve(instance, initial_solution; SA_max, SA_max_no_improvement=nothing, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
+    SA_max_no_improvement = something(SA_max_no_improvement, SA_max)
+    
     s = clone_sol(initial_solution)
     s_best = clone_sol(initial_solution)
 
@@ -595,6 +597,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
     fo_best = fo_s
 
     iter = 0
+    iter_no_improvement = 0
     T = T0
 
     rem_ops, ins_ops = length(REMOVAL_OPERATORS), length(INSERTION_OPERATORS)
@@ -611,8 +614,9 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
             println("")
         end
 
-        while iter < SA_max
+        while iter < SA_max && iter_no_improvement < SA_max_no_improvement
             iter += 1
+            iter_no_improvement += 1
 
             rem_idx, s2 = removal(instance, clone_sol(s), rem_weights)
             ins_idx, s2 = insertion(instance, s2, ins_weights)
@@ -628,6 +632,8 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
                 s = clone_sol(s2)
                 fo_s = fo_curr
                 if fo_curr < fo_best
+                    iter_no_improvement = 0
+
                     s_best = clone_sol(s2)
                     fo_best = fo_curr
                     rem_scores[rem_idx] += σ1
@@ -646,6 +652,7 @@ function alns_solve(instance, initial_solution; SA_max, α, T0, Tf, r, σ1, σ2,
 
         T = α * T
         iter = 0
+        iter_no_improvement = 0
 
         maintain_history(history, fo_s, fo_best, rem_scores, ins_scores)
         for i in 1:length(rem_weights)
