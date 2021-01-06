@@ -10,10 +10,10 @@ include("alns.jl")
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
-# data_root = "toy1"
+data_root = "toy1"
 # data_root = "Fáceis - f1_toy1"
 # data_root = "fullrand_1000cirurgias"
-data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
+# data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
 # data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
 # data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
 
@@ -22,7 +22,7 @@ out_dir = "Testes/" #"Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 10
+rooms = 2#0
 
 # Solution set up
 instance = (surgeries, rooms)
@@ -57,4 +57,5 @@ plot_operator_history(history)
 
 bad = get_badly_scheduled_surgeries(surgeries, solution)
 plot_solution(instance, solution, "$(out_dir)$(data_root)-alns")
-plot_per_day(instance, solution, "$(out_dir)$(data_root)-alns")
+
+plot_per_day(instance, solution, "$(out_dir)$(data_root)-alns", alns_fn)

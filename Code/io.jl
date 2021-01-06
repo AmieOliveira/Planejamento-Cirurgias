@@ -91,7 +91,9 @@ function plot_solution(instance, solution, filename="testeSalas")
                 if sc_d[idx_s] == d && sc_r[idx_s] == r
                     s_label = @sprintf("Cirurgia %i", idx_s)
                     plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label, color=COLORS_P[p_s])
-                    annotate!(sc_h[idx_s]+.5, 0.5, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
+                    annotate!(sc_h[idx_s]+.5, 0.6, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
+
+                    annotate!(sc_h[idx_s]+.5, 0.2, Plots.text(@sprintf("Cirurgião %i", g_s), 4, :left))
                 end
             end
             if d == 1
@@ -102,35 +104,39 @@ function plot_solution(instance, solution, filename="testeSalas")
             push!(pls, p)
         end
 
-        # TODO: Como fazer sem ter que especificar cada plot?
-        plot(pls..., layout = (DAYS, 1), legend = false)#, legend = false)
+        plot(pls..., layout = (DAYS, 1), legend = false)
         savefig(@sprintf("%s-%isalas-sala%i.pdf",filename, rooms, r))
         #close(fig)
     end
 end
 
-function plot_per_day(instance, solution, filename="testeDias")
+function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
     # FIXME
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
     dayPeriods = 46
 
+    pls = Array{Any, 2}(undef, DAYS, rooms)
+    hs = Float64[]
+
     for d in 1:DAYS
-    #fig = figure()
-        pls = Any[]
         for r in 1:rooms
             p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
             #hline()
-            yaxis!(p, @sprintf("Sala %i", r))#, showaxis=false)
             texts = []
             for s in surgeries
                 idx_s, p_s, w_s, e_s, g_s, t_s = s
                 if sc_d[idx_s] == d && sc_r[idx_s] == r
                     s_label = @sprintf("Cirurgia %i", idx_s)
                     plot!(rectangle(t_s, 1, sc_h[idx_s], 0), label=s_label, color=COLORS_P[p_s])
-                    annotate!(sc_h[idx_s]+.5, 0.5, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
+                    annotate!(sc_h[idx_s]+.5, 0.6, Plots.text(@sprintf("Cirurgia %i", idx_s), 8, :left))
+
+                    annotate!(sc_h[idx_s]+.5, 0.2, Plots.text(@sprintf("Cirurgião %i", g_s), 4, :left))
                 end
+            end
+            if d == 1
+                yaxis!(p, @sprintf("Sala %i", r))#, showaxis=false)
             end
             if r == 1
                 title!(DAY_NAMES[d])
@@ -138,12 +144,30 @@ function plot_per_day(instance, solution, filename="testeDias")
             if r == rooms
                 xaxis!("Tempo (períodos)")
             end
-            push!(pls, p)
+            pls[d, r] = p
+            push!(hs, .6/rooms)
         end
-
-        # TODO: Como fazer sem ter que especificar cada plot?
-        plot(pls..., layout = (rooms, 1), legend = false)#, legend = false)
-        savefig(@sprintf("%s-daily-dia%i.pdf",filename, d))
-        #close(fig)
     end
+
+    group = plot(pls..., layout = grid(rooms, DAYS, heights=hs), 
+                legend = false)
+
+    if fo_val === nothing
+        fo_val = target_fn(instance, solution, false)
+    end
+
+    y = ones(3) 
+    title = Plots.scatter(y, marker=0,markeralpha=0, 
+                            annotations=(2, y[2], Plots.text("F.O. = $(fo_val)"), 10),
+                            axis=false, leg=false,size=(200,100)
+    )
+
+    Plots.plot(
+        group,
+        title,
+        layout=grid(2,1,heights=[0.9,0.1])
+    )
+
+    plot!(size = (DAYS*750, rooms*100+50))
+    savefig(@sprintf("%s-daily.pdf",filename))
 end
