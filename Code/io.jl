@@ -118,9 +118,11 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
     dayPeriods = 46
 
     pls = Array{Any, 2}(undef, DAYS, rooms)
-    hs = Float64[]
+    day_plots = Array{Any, 1}(undef, DAYS)
 
     for d in 1:DAYS
+        hs = Float64[]
+
         for r in 1:rooms
             p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
             #hline()
@@ -135,9 +137,8 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
                     annotate!(sc_h[idx_s]+.5, 0.2, Plots.text(@sprintf("Cirurgião %i", g_s), 4, :left))
                 end
             end
-            if d == 1
-                yaxis!(p, @sprintf("Sala %i", r))#, showaxis=false)
-            end
+            yaxis!(p, @sprintf("Sala %i", r))#, showaxis=false)
+            
             if r == 1
                 title!(DAY_NAMES[d])
             end
@@ -147,10 +148,14 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
             pls[d, r] = p
             push!(hs, .6/rooms)
         end
-    end
 
-    group = plot(pls..., layout = grid(rooms, DAYS, heights=hs), 
-                legend = false)
+
+        day_plots[d] = plot(pls[d,:]..., 
+                            layout = grid(rooms, 1, heights=hs),#, margin=(10,10,10,10)), 
+                            legend = false
+        )
+        plot!(size = (700, rooms*100))
+    end
 
     if fo_val === nothing
         fo_val = target_fn(instance, solution, false)
@@ -158,16 +163,20 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
 
     y = ones(3) 
     title = Plots.scatter(y, marker=0,markeralpha=0, 
-                            annotations=(2, y[2], Plots.text("F.O. = $(fo_val)"), 10),
+                            annotations=(2, y[2], Plots.text("F.O. = $(fo_val)"), 14),
                             axis=false, leg=false,size=(200,100)
     )
 
+    allDays = plot(day_plots..., plot(showaxis=false), 
+                    layout=grid(3,2))#, widths=[.9/2 for i in 1:2]))
+    plot!(size = (3*700, 2*rooms*100))
+
     Plots.plot(
-        group,
+        allDays,
         title,
-        layout=grid(2,1,heights=[0.9,0.1])
+        layout=grid(2,1,heights=[0.95,0.05])
     )
 
-    plot!(size = (DAYS*750, rooms*100+50))
+    plot!(size = (3*700, 2*rooms*100+200))
     savefig(@sprintf("%s-daily.pdf",filename))
 end
