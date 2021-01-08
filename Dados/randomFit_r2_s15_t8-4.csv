@@ -14,3 +14,6 @@ Cirurgia (c);Prioridade (p);Dias_espera (w);Especialidade (e);Cirurgião (h);Dur
 13;4;310;2;6;10
 14;4;231;2;5;6
 15;4;179;2;1;4
+# RandomFit: Escala três urgências para cada sala
+# 2 salas. 15 cirurgias (6 urgencias)
+# Duração das cirurgias segundo distribuição normal com media 8 e desvio 4 (minimo e 2 e maximo 22)

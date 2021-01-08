@@ -72,11 +72,13 @@ if __name__ == '__main__':
 		data["Duração (tc)"].append(tc)
 
 		doc = np.random.randint(1, n_docs+1)
+		doc_base = doc
 		while surgeon_usage[doc-1] + tc > 100:
-			try:
-				doc = doc+1
-			except IndexError:
-				doc = 0
+			doc = doc + 1
+			if doc == n_docs+1:
+				doc = 1
+			if doc == doc_base:
+				break
 		data["Cirurgião (h)"].append(doc)
 		surgeon_usage[doc-1] += tc
 
