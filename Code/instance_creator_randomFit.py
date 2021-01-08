@@ -39,7 +39,9 @@ if __name__ == '__main__':
 	n_docs = 3*args.rooms[0]
 	surgeon_usage = np.zeros(n_docs)
 
-	for i in range(3*args.rooms[0]):
+	n_urgencias = 3*args.rooms[0]
+
+	for i in range(n_urgencias):
 		data["Cirurgia (c)"].append(i + 1)
 		data["Prioridade (p)"].append(1)
 		data["Dias_espera (w)"].append(1)
@@ -57,7 +59,7 @@ if __name__ == '__main__':
 		data["Especialidade (e)"].append(np.random.randint(1, n_esp+1))
 
 
-	for i in range(2*args.rooms[0], args.surgery_total[0]):
+	for i in range(n_urgencias, args.surgery_total[0]):
 		data["Cirurgia (c)"].append(i + 1)
 
 		data["Especialidade (e)"].append(np.random.randint(1, n_esp+1))
