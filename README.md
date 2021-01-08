@@ -36,8 +36,10 @@ tempo de limpeza), a cirurgia e o cirurgião.
 
 ## TODOs:
 
-- Fazer batch montar média e desvio padrão
-- Implementar parada por número de iterações sem melhora
+- Selecionar cirurgias "viaveis" dentre as 6 fullrand
+- Colocar novas cirurgias no drive
+- Resultados das instancias do drive
+- TTPLOTS!
 - Tunar parâmetros do ALNS!
     - Verificação dos operadores escolhidos e os ganhos (ou não) na solução ✓ 
         ⟹ Observação empírica mostra que os melhores operadores (por scores) dependem da instância avaliada
@@ -68,7 +70,6 @@ tempo de limpeza), a cirurgia e o cirurgião.
     - Inserção "gulosa" com outras prioridades? Máximo de cirurgias, por exemplo
     - Verificar o impacto de tirar algumas operações no resultado final obtido
         ⟹ Será que o ótimo local para o qual converge vai ser o mesmo se ele nao usar os 'singles', por exemplo?
-- Instâncias para teste ✓ (Esperando os outros grupos)
 - Plot dos scores: mudar cores para ficar mais diferente, e salvar em PDF.
     - Botar best solution em tracejado no plot da target function
     - Trocar label x pra temperatura
@@ -108,3 +109,5 @@ tempo de limpeza), a cirurgia e o cirurgião.
 - ~~Verificar se esta contanto o tempo semanal dos cirurgioes (NAIVE & ALNS)~~
 - ~~Acertar a greedy_insertion (testar colocando so um ou tantos quanto o possivel?)~~
 - ~~Verificar o operador de insercao gulosa: Ordem de prioridades está esquisita.~~ 
+- ~~Fazer batch montar média e desvio padrão~~ ✓
+- ~~Implementar parada por número de iterações sem melhora~~ ✓

@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	n_docs = 3*args.rooms[0]
 	surgeon_usage = np.zeros(n_docs)
 
-	n_urgencias = 3*args.rooms[0]
+	n_urgencias = 3*args.rooms[0]		# 46/media de duracao ao inves de 3?
 
 	for i in range(n_urgencias):
 		data["Cirurgia (c)"].append(i + 1)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 		data["Cirurgião (h)"].append(i+1)
 
 		tc = int(np.random.normal(args.duration[0], args.duration[1]))
-		if tc < 2:
+		if tc < 4:
 			tc = 2
 		elif tc > 22:
 			tc = 22
