@@ -11,42 +11,39 @@
 using Printf
 
 penalidades = [90, 20, 8, 3]
+deadlines = [3, 15, 60, 365]
 
-function eval_surgery(surgery, penalties, scd, verbose)
+function eval_surgery(surgery, scd, verbose)
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
     scheduled = (scd != nothing)
 
-    alpha = 10
-    
-    if scheduled
-        wait = w_s + 2 + scd
-        cost = wait^2 # wait/t_s
+    is_scheduled = (day_scheduled != nothing)
+    total_days = w_s + 2 + (is_scheduled ? day_scheduled : 7)
+    exceeded_deadline = (total_days > (deadlines[p_s] + 1))
+    cost = 0
 
-        if wait > janelas_tempo[p_s] + 1
-            # Penalidade por passar do prazo
-            cost = cost + (wait-janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
-        end
-        
-        if verbose
-            @printf("Surgery %i scheduled with cost: %f\n", idx_s, cost)
-        end
-        return cost
-    else
-        wait = w_s + 7
-        cost = wait^2 * penalties[p_s]# wait/t_s
-
-        if wait + 2 > janelas_tempo[p_s] + 1 
-            # Penalidade por passar do prazo
-            # Somo 2 do proximo final de semana. Ja tenho 
-            # que saber agora que vou passar do prazo
-            cost = cost + (wait + 2 - janelas_tempo[p_s])^alpha    #penalties[ min(p_s, penalty_timeout) ]
-        end
-
-        if verbose
-            @printf("Surgery %i not scheduled. Cost: %f\n", idx_s, cost)
-        end
-        return cost
+    if p_s == 1 && day_scheduled != 1
+        cost += (10 * (w_s + 2)) ^ (is_scheduled ? day_scheduled : 7)
     end
+
+    if is_scheduled
+        cost += (w_s + 2 + day_scheduled) ^ 2
+        if exceeded_deadline
+            cost += (w_s + 2 + day_scheduled - deadlines[p_s]) ^ 2
+        end
+    else
+        cost += penalidades[p_s] * (w_s + 5 + 2) ^ 2
+        if exceeded_deadline
+            cost += penalidades[p_s] * (w_s + 5 + 2*2 - deadlines[p_s]) ^ 2
+        end
+    end
+
+    if verbose
+        str = is_scheduled ? "scheduled" : "not scheduled"
+        println("Surgery $(idx_s) was $(str). Cost: $(cost)")
+    end
+
+    cost
 end
 
 function target_fn(surgeries, solution, verbose=false)
@@ -54,8 +51,7 @@ function target_fn(surgeries, solution, verbose=false)
 
     total = 0
     for s in surgeries
-        # println("f$(s) = $(eval_surgery(s, penalties, sc_d, sc_r, sc_h))")
-        total += eval_surgery(s, penalidades, sc_d[s[1]], verbose)
+        total += eval_surgery(s, sc_d[s[1]], verbose)
     end
     
     total
