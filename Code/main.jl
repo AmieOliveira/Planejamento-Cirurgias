@@ -15,14 +15,16 @@ data_dir = "Dados/"
 # data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
 # data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
 # data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
-data_root = "randomFit_r2_s15_t8-4"
+# data_root = "randomFit_r2_s15_t8-4"
+# data_root = "randomFit_r2_s50_t8-4"
+data_root = "randomFit_r5_s100_t8-4"
 
 out_dir = "Soluções/"
 # out_dir = "../Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 2#0
+rooms = 5#0
 
 # Solution set up
 instance = (surgeries, rooms)
