@@ -52,7 +52,7 @@ if __name__ == '__main__':
 		priority = np.random.random_integers(args.priority[0], args.priority[1])
 		data["Prioridade (p)"].append(priority)
 
-		max_waiting = np.min([DEADLINES[priority - 1] - 3, args.waiting[0]])
+		max_waiting = np.min([DEADLINES[priority - 1] - 2, args.waiting[0]])
 		waiting_time = np.random.random_integers(0, max_waiting)
 		data["Dias_espera (w)"].append(waiting_time)
 

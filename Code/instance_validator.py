@@ -25,7 +25,9 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 
-	ins_df = pd.read_csv(args.instance[0], sep=";")
+	ins_df = pd.read_csv(args.instance[0], sep=";", comment="#")
+	if len(ins_df.columns) == 1:
+		ins_df = pd.read_csv(args.instance[0], sep=",", comment="#")
 	sol_df = pd.read_csv(args.solution[0], sep=";").fillna(-1)
 	df = ins_df.set_index("Cirurgia (c)").join(sol_df.set_index("Cirurgia (c)"))
 

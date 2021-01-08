@@ -3,6 +3,8 @@ include("helper.jl")
 function solve(instance; verbose=true)
     surgeries, rooms = instance
 
+    surgeries = deepcopy(surgeries)
+
     sort!(surgeries, lt = (x, y) -> is_more_prioritary(x, y))
 
     h = ones(Int, DAYS, rooms) # h[i, j] stores the first available hour in room 'i' and day 'j'

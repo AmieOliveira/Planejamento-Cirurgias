@@ -76,13 +76,11 @@ function plot_solution(instance, solution, filename="testeSalas")
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    dayPeriods = 46
-
     for r in 1:rooms
     #fig = figure()
         pls = Any[]
         for d in 1:DAYS
-            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
+            p = plot(1:LENGTH_DAY, zeros(LENGTH_DAY), color=:black, yaxis=false)
             #hline()
             yaxis!(p, DAY_NAMES[d])#, showaxis=false)
             texts = []
@@ -115,8 +113,6 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
     surgeries, rooms = instance
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
 
-    dayPeriods = 46
-
     pls = Array{Any, 2}(undef, DAYS, rooms)
     day_plots = Array{Any, 1}(undef, DAYS)
 
@@ -124,7 +120,7 @@ function plot_per_day(instance, solution, filename="testeDias", fo_val=nothing)
         hs = Float64[]
 
         for r in 1:rooms
-            p = plot(1:dayPeriods, zeros(dayPeriods), color=:black, yaxis=false)
+            p = plot(1:LENGTH_DAY, zeros(LENGTH_DAY), color=:black, yaxis=false)
             #hline()
             texts = []
             for s in surgeries
