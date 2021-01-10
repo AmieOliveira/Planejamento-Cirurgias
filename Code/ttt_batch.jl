@@ -75,8 +75,8 @@ surgeries = load_surgeries("$(data_dir)$(filename).csv")
 instance = (surgeries, rooms)
 instance_results = []
 
-for i in 1:SAMPLES
-	output = @timed processALNS(instance)
+for i in 1:N
+	output = @timed processALNS(instance, targetValue)
 	alns_fn = output[1]
 	ctime = output[2]
 	
