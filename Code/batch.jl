@@ -10,26 +10,20 @@ include("alns.jl")
 # data_dir = "Dados/"
 data_dir = "../Dados/"
 files = [
-	# ("toy1", 1),
-	# ("toy2", 1),
-	# ("toy4", 1),
-	# ("fullrand_s50_p1-4_w20_t2-10_e5_g10", 4),
-	# ("fullrand_s50_p1-4_w20_t2-10_e5_g20", 4),
-	# ("fullrand_s50_p1-4_w20_t2-10_e5_g20", 5),
-	# ("fullrand_s50_p1-4_w40_t2-20_e10_g20", 6),
-	# ("fullrand_s70_p1-4_w40_t2-10_e10_g10", 10),
-	# ("fullrand_s70_p1-4_w40_t2-10_e20_g20", 10),
-	# ("fullrand_s100_p1-4_w40_t2-10_e20_g20", 10),
-	("randomFit_r2_s15_t8-4", 2),
-	("randomFit_r2_s15_t16-4", 2),
-	("randomFit_r2_s50_t8-4", 2),
-	("randomFit_r2_s50_t16-4", 2),
-	("randomFit_r5_s100_t8-4", 5),
-	("randomFit_r5_s100_t16-4", 5),
+	# ("randomFit_r2_s15_t8-4", 2),
+    ("randomFit_r2_s15_t16-4", 2),
+    ("randomFit_r2_s50_t8-4", 2),
+    ("randomFit_r2_s50_t16-4", 2),
+    ("randomFit_r5_s100_t8-4", 6),
+    ("randomFit_r5_s100_t16-4", 8),
+    ("fullrand_s50_p1-4_w20_t6-20_e4_g12", 3),
+    ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3),
+    ("fullrand_s70_p1-4_w30_t5-20_e3_g15", 4),
+    ("fullrand_s90_p1-4_w20_t6-20_e5_g20", 7)
 ]
 
 # Número de repetições
-SAMPLES = 10
+SAMPLES = 5
 
 # ALNS variables:
 SA_MAX = 1000
