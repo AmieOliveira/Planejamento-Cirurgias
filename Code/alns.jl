@@ -587,7 +587,12 @@ function plot_operator_history(history)
     gui()
 end
 
-function alns_solve(instance, initial_solution; SA_max, SA_max_no_improvement=nothing, α, T0, Tf, r, σ1, σ2, σ3, verbose=false)
+function alns_solve(instance, initial_solution; 
+                    SA_max, SA_max_no_improvement=nothing, 
+                    α, T0, Tf, 
+                    r, σ1, σ2, σ3, 
+                    verbose=false,
+                    target=nothing)
     SA_max_no_improvement = something(SA_max_no_improvement, SA_max)
     
     s = clone_sol(initial_solution)
@@ -625,6 +630,12 @@ function alns_solve(instance, initial_solution; SA_max, SA_max_no_improvement=no
             ins_freq[ins_idx] += 1
 
             fo_curr = target_fn(instance, s2)
+
+            if !(target_fn ≡ nothing)
+                if fo_curr ≤ target
+                    return s2, history
+                end
+            end
 
             ∆ = fo_curr - fo_s
 

@@ -10,26 +10,33 @@ include("alns.jl")
 # -- paths
 data_dir = "Dados/"
 # data_dir = "../Dados/"
+
 # data_root = "toy1"
-# data_root = "Fáceis - f1_toy1"
-# data_root = "fullrand_s50_p1-4_w40_t2-20_e10_g20"
-# data_root = "fullrand_s70_p1-4_w1-20_t2-20_e4_g10"
-# data_root = "fullrand_s100_p1-4_w40_t2-10_e20_g20"
-# data_root = "randomFit_r2_s15_t8-4"
-data_root = "randomFit_r2_s15_t16-4"
+data_root = "randomFit_r2_s15_t8-4"
+# data_root = "randomFit_r2_s15_t16-4"
 # data_root = "randomFit_r2_s50_t8-4"
+# data_root = "randomFit_r2_s50_t16-4"
 # data_root = "randomFit_r5_s100_t8-4"
+# data_root = "randomFit_r5_s100_t16-4"
+# data_root = "fullrand_s50_p1-4_w20_t6-20_e4_g12"
+# data_root = "Indefinidas - i8"
+# data_root = "Indefinidas - i9"
+# data_root = "Indefinidas - i10"
+# data_root = "Indefinidas - i11"
+# data_root = "fullrand_s70_p1-4_w20_t5-20_e5_g20"
+# data_root = "fullrand_s70_p1-4_w30_t5-20_e3_g15"
+# data_root = "fullrand_s90_p1-4_w20_t6-20_e5_g20"
 
 out_dir = "Soluções/"
 # out_dir = "../Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 2#0
+rooms = 7
 
 # Solution set up
 instance = (surgeries, rooms)
-solution = solve(instance, verbose=true)
+solution = solve(instance, verbose=false)
 print_solution(instance, solution)
 
 println("")
