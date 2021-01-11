@@ -1,4 +1,4 @@
-using CSV, DataFrames, Printf
+using CSV, DelimitedFiles, DataFrames, Printf
 using Debugger
 using Statistics
 
@@ -84,5 +84,5 @@ for i in 1:N
 end
 
 open("$(out_dir)ttt_$(out)_N$(N)_$(filename).dat", "w") do io
-	writedlm(io, [x y])
+	writedlm(io, rTimes)
 end
