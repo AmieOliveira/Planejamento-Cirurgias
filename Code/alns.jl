@@ -623,6 +623,7 @@ function alns_solve(instance, initial_solution;
                     α, T0, Tf, 
                     r, σ1, σ2, σ3, 
                     verbose=false,
+                    reheat=false,
                     target=nothing)
     SA_max_no_improvement = something(SA_max_no_improvement, SA_max)
     
@@ -676,7 +677,9 @@ function alns_solve(instance, initial_solution;
                 if fo_curr < fo_best
                     iter_no_improvement = 0
 
-                    T += 10
+                    if reheat
+                        T += 10
+                    end
 
                     s_best = clone_sol(s2)
                     fo_best = fo_curr
