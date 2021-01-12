@@ -10,7 +10,7 @@ include("alns.jl")
 # data_dir = "Dados/"
 data_dir = "../Dados/"
 fileData = ("randomFit_r2_s50_t8-4", 2, 389535, 500)
-out = "allOps_10-5-1_"
+out = "allOps_10-5-15_"
 out_dir = "../TTTplots/"
 
 	# ("randomFit_r2_s15_t8-4", 2),
@@ -40,7 +40,7 @@ T_FIM = 0.1
 R = 0.1
 SIGMA1 = 10
 SIGMA2 = 5
-SIGMA3 = 1
+SIGMA3 = 15
 
 function processALNS(instance, targt)
 	solution = solve(instance, verbose=false)
@@ -88,6 +88,8 @@ for i in 1:N
 	
 	push!(rTimes, ctime)
 end
+
+#sort!(rTimes)
 
 open("$(out_dir)ttt_$(out)_N$(N)_$(filename).dat", "w") do io
 	writedlm(io, rTimes)
