@@ -9,8 +9,8 @@ include("alns.jl")
 
 # data_dir = "Dados/"
 data_dir = "../Dados/"
-fileData = ("randomFit_r2_s50_t8-4", 2, 389535)
-out = "allIn"
+fileData = ("randomFit_r2_s50_t8-4", 2, 389535, 500)
+out = "allOps_10-5-1_"
 out_dir = "../TTTplots/"
 
 	# ("randomFit_r2_s15_t8-4", 2),
@@ -38,9 +38,9 @@ ALPHA = 0.95
 T_INI = 60
 T_FIM = 0.1
 R = 0.1
-SIGMA1 = 5
-SIGMA2 = 0
-SIGMA3 = 5
+SIGMA1 = 10
+SIGMA2 = 5
+SIGMA3 = 1
 
 function processALNS(instance, targt)
 	solution = solve(instance, verbose=false)
@@ -52,7 +52,8 @@ function processALNS(instance, targt)
 					T0=T_INI, Tf=T_FIM, 
 					r=R, σ1=SIGMA1, σ2=SIGMA2, σ3=SIGMA3, 
 					verbose=false,
-					target = targt)
+					target = targt
+	)
 
 	alns_fn = target_fn(instance, solution, false)
 
@@ -68,6 +69,7 @@ rTimes = []
 filename = fileData[1]
 rooms = fileData[2]
 targetValue = fileData[3]
+t_teto = fileData[4]
 
 println("$filename:")
 
@@ -79,6 +81,10 @@ for i in 1:N
 	output = @timed processALNS(instance, targetValue)
 	alns_fn = output[1]
 	ctime = output[2]
+
+	if alns_fn > targetValue
+		ctime = t_teto
+	end
 	
 	push!(rTimes, ctime)
 end
