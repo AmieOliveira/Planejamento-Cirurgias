@@ -1,11 +1,41 @@
 using Random
 include("helper.jl")
 
-function random_removal!(instance, solution)
+function random_removal_single!(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
 
-    qt_to_remove = rand(0:2)
+    qt_to_remove = 1
+    altered = []
+
+    for _ in 1:qt_to_remove
+        if length(scheduled_surgeries) == 0
+            return solution
+        end
+
+        pos_to_del = rand(1:length(scheduled_surgeries))
+
+        sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+        idx_s, p_s, w_s, e_s, g_s, t_s = scheduled_surgeries[pos_to_del]
+        
+        push!(altered, (sc_d[idx_s], sc_r[idx_s]))
+
+        solution = unschedule_surgery(instance, solution, scheduled_surgeries[pos_to_del])
+        deleteat!(scheduled_surgeries, pos_to_del)
+    end
+
+    for (day, room) in unique(altered)
+        solution, ok = squeeze_surgeries_up!(instance, solution, day, room)
+    end
+
+    solution
+end
+
+function random_removal_multiple!(instance, solution)
+    surgeries, rooms = instance
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+
+    qt_to_remove = rand(0:3)
     altered = []
 
     for _ in 1:qt_to_remove
@@ -539,7 +569,8 @@ function insertion(instance, solution, weights)
 end
 
 REMOVAL_OPERATORS = [
-    ("random   ", random_removal!),
+    ("random single", random_removal_single!),
+    ("random multiple", random_removal_multiple!),
     ("worst single", worst_removal_single!),
     ("worst multiple", worst_removal_multiple!),
     ("shaw day", shaw_removal_day!),
