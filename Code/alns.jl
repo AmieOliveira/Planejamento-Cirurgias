@@ -612,7 +612,7 @@ function plot_operator_history(history)
     end
 
     plot!(p3, x, target_fns_curr, xlabel="Iterations", label="target function (curr)", lw=3)
-    plot!(p3, x, target_fns_best, label="target function (best)", lw=3, linestyle=:dash)
+    plot!(p3, x, target_fns_best, label="target function (best)", lw=3)
     
     plot(p1, p2, p3, layout=(3, 1))
     gui()
@@ -662,7 +662,7 @@ function alns_solve(instance, initial_solution;
 
             fo_curr = target_fn(instance, s2)
 
-            if !(target_fn ≡ nothing)
+            if !(target ≡ nothing)
                 if fo_curr ≤ target
                     return s2, history
                 end
@@ -675,6 +675,8 @@ function alns_solve(instance, initial_solution;
                 fo_s = fo_curr
                 if fo_curr < fo_best
                     iter_no_improvement = 0
+
+                    T += 10
 
                     s_best = clone_sol(s2)
                     fo_best = fo_curr
