@@ -1,11 +1,41 @@
 using Random
 include("helper.jl")
 
-function random_removal!(instance, solution)
+function random_removal_single!(instance, solution)
     surgeries, rooms = instance
     scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
 
-    qt_to_remove = rand(0:2)
+    qt_to_remove = 1
+    altered = []
+
+    for _ in 1:qt_to_remove
+        if length(scheduled_surgeries) == 0
+            return solution
+        end
+
+        pos_to_del = rand(1:length(scheduled_surgeries))
+
+        sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
+        idx_s, p_s, w_s, e_s, g_s, t_s = scheduled_surgeries[pos_to_del]
+        
+        push!(altered, (sc_d[idx_s], sc_r[idx_s]))
+
+        solution = unschedule_surgery(instance, solution, scheduled_surgeries[pos_to_del])
+        deleteat!(scheduled_surgeries, pos_to_del)
+    end
+
+    for (day, room) in unique(altered)
+        solution, ok = squeeze_surgeries_up!(instance, solution, day, room)
+    end
+
+    solution
+end
+
+function random_removal_multiple!(instance, solution)
+    surgeries, rooms = instance
+    scheduled_surgeries = get_scheduled_surgeries(solution, surgeries)
+
+    qt_to_remove = rand(0:3)
     altered = []
 
     for _ in 1:qt_to_remove
@@ -539,7 +569,8 @@ function insertion(instance, solution, weights)
 end
 
 REMOVAL_OPERATORS = [
-    ("random   ", random_removal!),
+    ("random single", random_removal_single!),
+    ("random multiple", random_removal_multiple!),
     ("worst single", worst_removal_single!),
     ("worst multiple", worst_removal_multiple!),
     ("shaw day", shaw_removal_day!),
@@ -581,7 +612,7 @@ function plot_operator_history(history)
     end
 
     plot!(p3, x, target_fns_curr, xlabel="Iterations", label="target function (curr)", lw=3)
-    plot!(p3, x, target_fns_best, label="target function (best)", lw=3, linestyle=:dash)
+    plot!(p3, x, target_fns_best, label="target function (best)", lw=3)
     
     plot(p1, p2, p3, layout=(3, 1))
     gui()
@@ -592,6 +623,7 @@ function alns_solve(instance, initial_solution;
                     α, T0, Tf, 
                     r, σ1, σ2, σ3, 
                     verbose=false,
+                    reheat=false,
                     target=nothing)
     SA_max_no_improvement = something(SA_max_no_improvement, SA_max)
     
@@ -631,7 +663,7 @@ function alns_solve(instance, initial_solution;
 
             fo_curr = target_fn(instance, s2)
 
-            if !(target_fn ≡ nothing)
+            if !(target ≡ nothing)
                 if fo_curr ≤ target
                     return s2, history
                 end
@@ -644,6 +676,10 @@ function alns_solve(instance, initial_solution;
                 fo_s = fo_curr
                 if fo_curr < fo_best
                     iter_no_improvement = 0
+
+                    if reheat
+                        T += 10
+                    end
 
                     s_best = clone_sol(s2)
                     fo_best = fo_curr
