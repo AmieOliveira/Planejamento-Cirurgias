@@ -44,6 +44,9 @@
     - Fazer operadores de inserção/remoção retornarem o valor da F.O.? 
     - Verificar `can_surgeon_fit_surgery_in_timeslot`
     - Botar no relatório a diferença de tempo das antigas estruturas pras novas estruturas
+    - Otimização da verificação de disponibilidade do cirurgião:
+    No momento ele verifica se o cirurgião esta livre ou nao em um timeslot. Mas se ele estiver parcialmente livre o timeslot é descartado de qualquer forma. Poderíamos trocar a função de verificação para retornar o tempo dentro do timeslot no qual o cirurgião está livre, e se o 
+    timeslot retornado for nulo, ele parte para o próximo
 
 ---
 
