@@ -16,20 +16,75 @@
  DONE 
 @--------------------------------------------------------@
 
-@--------------------------------------------------------@
- Input data set > 
 
-     data file   : ttt_allOps_10-5-15__N100_randomFit_r2_s50_t8-4.dat 
-     data points : 100 
 
-     data file   : ttt_randOnly__N100_randomFit_r2_s50_t8-4.dat 
-     data points : 100 
+
+
+//////////////////////////////////////////////////////////////
+    I12:                (fullrand_s70_p1-4_w20_t5-20_e5_g20)
 @--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
  Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.842
+
+ DONE
 @--------------------------------------------------------@
- Result > 
 
-      P(x1 <= x2) = 0.8041 
+@--------------------------------------------------------@
+ Input data set >
 
- DONE 
+     data file   : ttt_allOps_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.872400000000001
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.9528
+
+ DONE
+@--------------------------------------------------------@
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5556
+
+ DONE
 @--------------------------------------------------------@

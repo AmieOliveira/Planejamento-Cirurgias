@@ -9,7 +9,7 @@ include("alns.jl")
 
 # data_dir = "Dados/"
 data_dir = "../Dados/"
-fileData = ("randomFit_r2_s50_t8-4", 2, 389535, 500)
+fileData = ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825*1.1, 1000)
 out = "allOps_10-5-15_"
 out_dir = "../TTTplots/"
 
@@ -20,7 +20,7 @@ out_dir = "../TTTplots/"
 	# ("randomFit_r5_s100_t8-4", 6),
 	# ("randomFit_r5_s100_t16-4", 8),
 	# ("fullrand_s50_p1-4_w20_t6-20_e4_g12", 3),
-	# ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3),
+	# ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825, 1000) # 19468*1.2
 	# ("fullrand_s70_p1-4_w30_t5-20_e3_g15", 4),
 	# ("fullrand_s90_p1-4_w20_t6-20_e5_g20", 7),
 	# ("Indefinidas - i8", 7),
@@ -29,7 +29,7 @@ out_dir = "../TTTplots/"
 	# ("Indefinidas - i11", 15),
 
 # Número de repetições
-N = 100
+N = 50
 
 # ALNS variables:
 SA_MAX = 1000
@@ -77,20 +77,18 @@ surgeries = load_surgeries("$(data_dir)$(filename).csv")
 instance = (surgeries, rooms)
 instance_results = []
 
-for i in 1:N
-	output = @timed processALNS(instance, targetValue)
-	alns_fn = output[1]
-	ctime = output[2]
+open("$(out_dir)ttt_$(out)_N$(N)_t$(trunc(Int, targetValue))_$(filename).dat", "w") do io
+	for i in 1:N
+		output = @timed processALNS(instance, targetValue)
+		alns_fn = output[1]
+		ctime = output[2]
 
-	if alns_fn > targetValue
-		ctime = t_teto
+		if alns_fn > targetValue
+			ctime = t_teto
+		end
+
+		push!(rTimes, ctime)
+
+		writedlm(io, ctime)
 	end
-	
-	push!(rTimes, ctime)
-end
-
-#sort!(rTimes)
-
-open("$(out_dir)ttt_$(out)_N$(N)_$(filename).dat", "w") do io
-	writedlm(io, rTimes)
 end

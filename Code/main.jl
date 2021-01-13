@@ -11,8 +11,8 @@ include("alns.jl")
 data_dir = "Dados/"
 # data_dir = "../Dados/"
 
-# data_root = "toy1"
-data_root = "randomFit_r2_s15_t8-4"
+data_root = "toy1"
+# data_root = "randomFit_r2_s15_t8-4"
 # data_root = "randomFit_r2_s15_t16-4"
 # data_root = "randomFit_r2_s50_t8-4"
 # data_root = "randomFit_r2_s50_t16-4"
@@ -32,7 +32,7 @@ out_dir = "Soluções/"
 
 # -- load instance parameters
 surgeries = load_surgeries("$(data_dir)$(data_root).csv") 
-rooms = 7
+rooms = 1
 
 # Solution set up
 instance = (surgeries, rooms)
