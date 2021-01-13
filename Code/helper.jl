@@ -199,7 +199,9 @@ function can_surgeon_fit_surgery_in_timeslot(instance, solution, surgery, day, t
     sc_d, sc_r, sc_h, e, sg_tt, sc_ts = solution
     idx_s, p_s, w_s, e_s, g_s, t_s = surgery
 
-    for s2 in surgeries
+    day_surgeries = filter(s -> sc_d[s[IDX_S]] == day, surgeries)
+
+    for s2 in day_surgeries
         idx_s2, p_s2, w_s2, e_s2, g_s2, t_s2 = s2
         if sc_d[idx_s2] == day
             s2_start = sc_h[idx_s2]
