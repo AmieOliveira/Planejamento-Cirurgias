@@ -9,8 +9,19 @@ include("alns.jl")
 
 # data_dir = "Dados/"
 data_dir = "../Dados/"
-fileData = ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825*1.1, 1000)
+fileData = ("randomFit_r5_s100_t8-4", 6, 1526700, 1000) # I5
+           #("randomFit_r2_s15_t8-4", 2, 260870, 30)                   # I1
+           #("randomFit_r2_s15_t16-4", 2, 427778, 30)                  # I2
+           #("randomFit_r2_s50_t8-4", 2, 383300, 1000)                 # I3
+           #("randomFit_r2_s50_t16-4", 2, 1497200, 1000)               # I4
+           #("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825*1.1, 1000) # I12
+
 out = "allOps_10-5-15_"
+# randOnly
+# rand+greedy
+# rand+greedy+worst
+# rand+greedy+worst+shaw
+# allOps
 out_dir = "../TTTplots/"
 
 	# ("randomFit_r2_s15_t8-4", 2),
