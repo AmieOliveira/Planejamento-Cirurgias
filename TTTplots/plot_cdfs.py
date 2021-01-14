@@ -1,23 +1,24 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-titulo = "I4\nσ1=10, σ2=5, σ3=15. Objetivo: 1497200"         # I4
+titulo = "I5\nσ1=10, σ2=5, σ3=15. Objetivo: 1526900"         # I5
 # "I1\nσ1=10, σ2=5, σ3=15. Objetivo: 260870"        # I1
 # "I2\nσ1=10, σ2=5, σ3=15. Objetivo: 42778"         # I2
 # "I2\nσ1=10, σ2=5, σ3=15. Objetivo: 383300"        # I3
+# "I4\nσ1=10, σ2=5, σ3=15. Objetivo: 1497200"       # I4
 # "I12\nσ1=10, σ2=5, σ3=15. Objetivo: 21807.5"      # I12
-output = "plots/timetotarget_10-5-15_i4_N100_t1497200_randomFit_r2_s50_t16-4"
+output = "plots/timetotarget_10-5-15_i5_N50_t1526900_randomFit_r5_s100_t8-4"
 # "allOps_shaw_worst_greedy_randOnly_10-5-15__N100_t260870_randomFit_r2_s15_t8-4"               # I1
 # "allOps_shaw_worst_greedy_randOnly_10-5-15__N100_t427778_randomFit_r2_s15_t16-4"              # I2
 # "allOps_shaw_worst_greedy_randOnly_10-5-15__N100_t383300_randomFit_r2_s50_t8-4"               # I3
 # "allOps_shaw_worst_greedy_randOnly_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20"    # I12
 
 files = [
-    ("ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso, Pior, Shaw e Arrependimento", 1000),
-    ("ttt_rand+greedy+worst+shaw_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso, Pior e Shaw", 1000),
-    ("ttt_rand+greedy+worst_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso e Pior", 1000),
-    ("ttt_rand+greedy_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório e Guloso", 1000),
-    ("ttt_randOnly_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Somente aleatório", 1000),
+    ("ttt_allOps_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat", "Aleatório, Guloso, Pior, Shaw e Arrependimento", 1000),
+    ("ttt_rand+greedy+worst+shaw_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat", "Aleatório, Guloso, Pior e Shaw", 1000),
+    ("ttt_rand+greedy+worst_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat", "Aleatório, Guloso e Pior", 1000),
+    ("ttt_rand+greedy_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat", "Aleatório e Guloso", 1000),
+    ("ttt_randOnly_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat", "Somente aleatório", 1000),
 ]
 
 # I1
@@ -48,6 +49,13 @@ files = [
 #]
 
 # I4
+#[
+#    ("ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso, Pior, Shaw e Arrependimento", 1000),
+#    ("ttt_rand+greedy+worst+shaw_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso, Pior e Shaw", 1000),
+#    ("ttt_rand+greedy+worst_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório, Guloso e Pior", 1000),
+#    ("ttt_rand+greedy_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Aleatório e Guloso", 1000),
+#    ("ttt_randOnly_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat", "Somente aleatório", 1000),
+#]
 
 # I12
 #[
@@ -58,11 +66,11 @@ files = [
 #    ("ttt_randOnly_10-5-15__N50_t21807_fullrand_s70_p1-4_w20_t5-20_e5_g20.dat", "Somente aleatório", 1000),
 #]
 
-teto = 500
+teto = 150
 # 8      # I1
 # 6      # I2
 # 50     # I3
-#
+# 500    # I4
 # 500    # I12
 
 fig = plt.Figure()
