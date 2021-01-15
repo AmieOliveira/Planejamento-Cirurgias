@@ -454,3 +454,76 @@ Computing probability >
  DONE
 @--------------------------------------------------------@
 
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I11:                (Indefinidas - i11)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3162
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5422
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.8474
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1838
+
+ DONE
+@--------------------------------------------------------@
