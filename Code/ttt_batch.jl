@@ -9,12 +9,21 @@ include("alns.jl")
 
 # data_dir = "Dados/"
 data_dir = "../Dados/"
-fileData = ("randomFit_r5_s100_t8-4", 6, 1526700, 1000) # I5
+fileData = ("randomFit_r5_s100_t16-4", 8, 1939500, 1000) # I6
            #("randomFit_r2_s15_t8-4", 2, 260870, 30)                   # I1
            #("randomFit_r2_s15_t16-4", 2, 427778, 30)                  # I2
            #("randomFit_r2_s50_t8-4", 2, 383300, 1000)                 # I3
            #("randomFit_r2_s50_t16-4", 2, 1497200, 1000)               # I4
+           #("randomFit_r5_s100_t8-4", 6, 1526900, 1000)               # I5
+           #("randomFit_r5_s100_t16-4", 8, 1939500, 1000)              # I6
+           #("fullrand_s50_p1-4_w20_t6-20_e4_g12", 3, 9680, 200)       # I7
+           #("Indefinidas - i8", 7, 47200, 1000)                       # I8
+           #("Indefinidas - i9", 6, 40800, 200)                        # I9
+           #("Indefinidas - i10", 10, 98400, 1000)                     # I10
+           #("Indefinidas - i11", 15, 139500, 1000)                    # I11
            #("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825*1.1, 1000) # I12
+           #("fullrand_s70_p1-4_w30_t5-20_e3_g15", 4, 20100, 1000)     # I13
+           #("fullrand_s90_p1-4_w20_t6-20_e5_g20", 7, 15750, 500)      # I14
 
 out = "allOps_10-5-15_"
 # randOnly
@@ -24,20 +33,20 @@ out = "allOps_10-5-15_"
 # allOps
 out_dir = "../TTTplots/"
 
-	# ("randomFit_r2_s15_t8-4", 2),
-	# ("randomFit_r2_s15_t16-4", 2),
-	# ("randomFit_r2_s50_t8-4", 2),
-	# ("randomFit_r2_s50_t16-4", 2),
-	# ("randomFit_r5_s100_t8-4", 6),
-	# ("randomFit_r5_s100_t16-4", 8),
-	# ("fullrand_s50_p1-4_w20_t6-20_e4_g12", 3),
+	# ("randomFit_r2_s15_t8-4", 2)
+	# ("randomFit_r2_s15_t16-4", 2)
+	# ("randomFit_r2_s50_t8-4", 2)
+	# ("randomFit_r2_s50_t16-4", 2)
+	# ("randomFit_r5_s100_t8-4", 6)
+	# ("randomFit_r5_s100_t16-4", 8)
+	# ("fullrand_s50_p1-4_w20_t6-20_e4_g12", 3)
 	# ("fullrand_s70_p1-4_w20_t5-20_e5_g20", 3, 19825, 1000) # 19468*1.2
-	# ("fullrand_s70_p1-4_w30_t5-20_e3_g15", 4),
-	# ("fullrand_s90_p1-4_w20_t6-20_e5_g20", 7),
-	# ("Indefinidas - i8", 7),
-	# ("Indefinidas - i9", 6),
-	# ("Indefinidas - i10", 10),
-	# ("Indefinidas - i11", 15),
+	# ("fullrand_s70_p1-4_w30_t5-20_e3_g15", 4)
+	# ("fullrand_s90_p1-4_w20_t6-20_e5_g20", 7)
+	# ("Indefinidas - i8", 7)
+	# ("Indefinidas - i9", 6)
+	# ("Indefinidas - i10", 10), 98400
+	# ("Indefinidas - i11", 15)
 
 # Número de repetições
 N = 50
