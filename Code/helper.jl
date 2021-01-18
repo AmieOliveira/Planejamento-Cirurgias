@@ -4,7 +4,7 @@ LENGTH_INTERVAL = 2
 LENGTH_DAY = 46
 
 DEADLINES = [3, 15, 60, 365]
-PENALTIES = [90, 20, 8, 1]
+PENALTIES = [90, 20, 5, 1]
 COLORS_P = [:red, :orange, :yellow, :green]
 
 DAYS = 5

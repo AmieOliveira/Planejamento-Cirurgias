@@ -624,6 +624,7 @@ function alns_solve(instance, initial_solution;
                     r, σ1, σ2, σ3, 
                     verbose=false,
                     reheat=false,
+                    cooling=:geometric,
                     target=nothing)
     SA_max_no_improvement = something(SA_max_no_improvement, SA_max)
     
@@ -697,7 +698,13 @@ function alns_solve(instance, initial_solution;
             end
         end
 
-        T = α * T
+        if cooling == :geometric
+            T = α * T
+        else
+            β = (T0 - Tf) / (SA_max * T0 * Tf)
+            T = T / (1 + β*T)
+        end
+        
         iter = 0
         iter_no_improvement = 0
 
