@@ -4,26 +4,28 @@ import pdb
 from scipy.stats import t
 
 if __name__ == '__main__':
+	title = "I6-boxplots"
+
 	df = [
 		(
-			"I3 (randomFit_r2_s50_t8-4)",
-			[("Naive", [397618, 1e-10, 397618, 397618, 10]),
-					("Random", [383721, 2949, 381779, 389535, 10]),
-				    ("+ Greedy insertions", [383876, 2818, 381873, 389471, 10]),
-				    ("+ Worst removals", [382753, 711, 382053, 384458, 10]),
-				    ("+ Shaw removals", [382682, 904, 381755, 384735, 10]),
-				    ("+ Regret insertion", [382647, 505, 381932, 383601, 10])
-			]
-		), (
-			"I6 (randomFit_r5_s100_t16-4)",
-			[("Naive", [1960222, 1e-10, 1960222, 1960222, 10]),
-					("Random", [1936883, 1007, 1935602, 1938871, 10]),
-				    ("+ Greedy insertions", [1940519, 1128, 1938314, 1942169, 10]),
-				    ("+ Worst removals", [1941818, 1386, 1939580, 1944037, 10]),
-				    ("+ Shaw removals", [1938368, 1475, 1935923, 1940531, 10]),
-				    ("+ Regret insertion", [1939535, 1371, 1936869, 1940907, 10])
-			]
-		), (
+		#	"I3 (randomFit_r2_s50_t8-4)",
+		#	[("Naive", [397618, 1e-10, 397618, 397618, 10]),
+		#			("Random", [383721, 2949, 381779, 389535, 10]),
+		#		    ("+ Greedy insertions", [383876, 2818, 381873, 389471, 10]),
+		#		    ("+ Worst removals", [382753, 711, 382053, 384458, 10]),
+		#		    ("+ Shaw removals", [382682, 904, 381755, 384735, 10]),
+		#		    ("+ Regret insertion", [382647, 505, 381932, 383601, 10])
+		#	]
+		#), (
+		#	"I6 (randomFit_r5_s100_t16-4)",
+		#	[("Naive", [1960222, 1e-10, 1960222, 1960222, 10]),
+		#			("Random", [1936883, 1007, 1935602, 1938871, 10]),
+		#		    ("+ Greedy insertions", [1940519, 1128, 1938314, 1942169, 10]),
+		#		    ("+ Worst removals", [1941818, 1386, 1939580, 1944037, 10]),
+		#		    ("+ Shaw removals", [1938368, 1475, 1935923, 1940531, 10]),
+		#		    ("+ Regret insertion", [1939535, 1371, 1936869, 1940907, 10])
+		#	]
+		#), (
 			"I12 (fullrand_s70_p1-4_w20_t5-20_e5_g20)",
 			[("Naive", [35202, 1e-10, 35202, 35202, 10]),
 					("Random", [20004, 342, 19515, 20516, 10]),
@@ -76,12 +78,13 @@ if __name__ == '__main__':
 	# 	("1000", [19468, 537, 18646, 20615, 10]),
 	# ]
 
-	fig, ax = plt.subplots()
+	#fig, ax = plt.subplots()
 
 	should_color = False
 	c1, c2 = 'pink', 'green'
 
-	fig, axs = plt.subplots(1, 3)
+	print(len(df))
+	fig, axs = plt.subplots(1, len(df), figsize=(25,5))
 
 	for (i, (subtitle, data)) in enumerate(df):
 		boxes = []
@@ -99,8 +102,12 @@ if __name__ == '__main__':
 		        'fliers': [min, max]        # Outliers
 		    })
 
-		axs[i].set_title(subtitle)
-		bxp_plt = axs[i].bxp(boxes, patch_artist=should_color)
+		try:
+			axs[i].set_title(subtitle)
+			bxp_plt = axs[i].bxp(boxes, patch_artist=should_color)
+		except TypeError:
+			axs.set_title(subtitle)
+			bxp_plt = axs.bxp(boxes, patch_artist=should_color)
 	
 		if should_color:
 			# for item in ['boxes', 'whiskers', 'fliers', 'medians', 'caps']:
@@ -108,9 +115,17 @@ if __name__ == '__main__':
 			plt.setp(bxp_plt["boxes"], facecolor=c1)
 			plt.setp(bxp_plt["fliers"], markeredgecolor=c2)
 
-		plt.setp(axs[i].xaxis.get_majorticklabels(), rotation=90)
+		try:
+			plt.setp(axs[i].xaxis.get_majorticklabels(), rotation=90)
+		except TypeError:
+			plt.setp(axs.xaxis.get_majorticklabels(), rotation=0)
 
-	axs[0].set_ylabel("Função objetivo")
+	try:
+		axs[0].set_ylabel("Função objetivo")
+	except TypeError:
+		axs.set_ylabel("Função objetivo")
 	plt.subplots_adjust(bottom=0.23, wspace=0.3)
 	# plt.subplots_adjust(top=0.35)
+
+	plt.savefig("boxplots/" + title+".pdf")
 	plt.show()

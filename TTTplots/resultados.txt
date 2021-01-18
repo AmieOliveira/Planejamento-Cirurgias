@@ -88,3 +88,960 @@ Computing probability >
 
  DONE
 @--------------------------------------------------------@
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I1:                (randomFit_r2_s15_t8-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+     data file   : ttt_randOnly_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3142
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.43755
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5254
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N100_t260870_randomFit_r2_s15_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.47275
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I3:                (randomFit_r2_s50_t8-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+     data file   : ttt_randOnly_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.30315
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.45155
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4327
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N100_t383300_randomFit_r2_s50_t8-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.32335
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I2:                (randomFit_r2_s15_t16-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+     data file   : ttt_randOnly_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.227
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3329
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4574
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N100_t42778_randomFit_r2_s15_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.40785
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I4:                (randomFit_r2_s50_t16-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+     data file   : ttt_randOnly_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.6127
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.7648
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.7878
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N100_t1497200_randomFit_r2_s50_t16-4.dat
+     data points : 100
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.67915
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I5:                (randomFit_r5_s100_t8-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1758
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.534
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.7738
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t1526900_randomFit_r5_s100_t8-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1618
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I11:                (Indefinidas - i11)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3162
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5422
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.8474
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t139500_Indefinidas - i11.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1838
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I8:                (Indefinidas - i8)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4704
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.6936
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.6308
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t47200_Indefinidas - i8.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.36
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I14:                (fullrand_s70_p1-4_w30_t5-20_e3_g15)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4632
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.6972
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.7708
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t15750_fullrand_s90_p1-4_w20_t6-20_e5_g20.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3468
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I13:                (fullrand_s70_p1-4_w30_t5-20_e3_g15)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1278
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.2662
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4746
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t20100_fullrand_s70_p1-4_w30_t5-20_e3_g15.dat
+     data points : 50
+@--------------------------------------------------------@
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.307
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I10:                (Indefinidas - i10)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.203
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.2092
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.2874
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t98400_Indefinidas - i10.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3416
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I9:                (Indefinidas - i9)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1486
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+@--------------------------------------------------------@
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.251
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5196
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t40800_Indefinidas - i9.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.3998
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I7:                (fullrand_s50_p1-4_w20_t6-20_e4_g12)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.6936
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.7978
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.8728
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t9680_fullrand_s50_p1-4_w20_t6-20_e4_g12.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.4724
+
+ DONE
+@--------------------------------------------------------@
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+    I6:                (randomFit_r5_s100_t16-4)
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+     data file   : ttt_randOnly_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.1614
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.5024
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.652
+
+ DONE
+@--------------------------------------------------------@
+
+@--------------------------------------------------------@
+ Input data set >
+
+     data file   : ttt_allOps_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+     data file   : ttt_rand+greedy+worst+shaw_10-5-15__N50_t1939500_randomFit_r5_s100_t16-4.dat
+     data points : 50
+
+ Computing probability >
+ Result >
+
+      P(x1 <= x2) = 0.2756
+
+ DONE
+@--------------------------------------------------------@
